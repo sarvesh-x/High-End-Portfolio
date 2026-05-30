@@ -4,7 +4,7 @@ import Lenis from "lenis";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const nav = ["resume", "github", "patreon", "linkedin", "email"];
+const nav = ["cv", "github", "patreon", "linkedin", "email"];
 function useLenis() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -73,7 +73,7 @@ function useScramble(label: string) {
   return { text, scramble, reset };
 }
 
-function NavItem({ label, onEnter }: { label: string; onEnter: (el: HTMLAnchorElement) => void }) {
+function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLAnchorElement) => void; isDim: boolean }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const [fixedW, setFixedW] = useState(0);
@@ -90,8 +90,9 @@ function NavItem({ label, onEnter }: { label: string; onEnter: (el: HTMLAnchorEl
     <a
       ref={ref}
       href="#"
+      className={isDim ? "nav-item-dim" : ""}
       onMouseEnter={() => {
-        if (ref.current) onEnter(ref.current);
+        if (ref.current) onEnter(ref.current, label);
         scramble();
       }}
       onMouseLeave={reset}
@@ -108,19 +109,23 @@ function Nav() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const [hovered, setHovered] = useState(false);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [box, setBox] = useState({ top: 0, left: 0, width: 0, height: 0 });
 
-  function handleEnter(el: HTMLAnchorElement) {
+  function handleEnter(el: HTMLAnchorElement, label: string) {
     if (!navRef.current) return;
     const navRect = navRef.current.getBoundingClientRect();
     const rect = el.getBoundingClientRect();
+    const hPad = 2;
+    const vPad = -5;
     setBox({
-      top: rect.top - navRect.top,
-      left: rect.left - navRect.left,
-      width: rect.width,
-      height: rect.height,
+      top: rect.top - navRect.top - vPad,
+      left: rect.left - navRect.left - hPad,
+      width: rect.width + hPad * 2,
+      height: rect.height + vPad * 2,
     });
     setHovered(true);
+    setHoveredLabel(label);
   }
 
   useEffect(() => {
@@ -186,9 +191,9 @@ function Nav() {
         </svg>
       </button>
 
-      <nav className="header-nav" aria-label="Social links" ref={navRef} onMouseLeave={() => setHovered(false)}>
+      <nav className="header-nav" aria-label="Social links" ref={navRef} onMouseLeave={() => { setHovered(false); setHoveredLabel(null); }}>
         {nav.map((item) => (
-          <NavItem key={item} label={item} onEnter={handleEnter} />
+          <NavItem key={item} label={item} onEnter={handleEnter} isDim={hoveredLabel !== null && hoveredLabel !== item} />
         ))}
         <motion.div
           className="nav-hover-box"
