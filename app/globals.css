@@ -1064,3 +1064,139 @@ html:hover .cursor-dot {
     align-items: center;
   }
 }
+
+/* ===== LOADING SCREEN ===== */
+.boot-loading body > :not(.loader) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+body.loader-active {
+  overflow: hidden;
+}
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  background: transparent;
+  overflow: hidden;
+}
+.boot-loading .loader {
+  background: #0f0f0f;
+}
+.loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: none;
+}
+.loader-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform: translate(-50%, -50%);
+}
+.loader-content svg {
+  display: block;
+  width: 30px;
+  height: auto;
+}
+.loader-line {
+  position: relative;
+  width: 200px;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+}
+.loader-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  height: 1px;
+  background: #fff;
+}
+.loader-pct {
+  font-family: var(--font-mono), "SF Mono", SFMono-Regular, ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+/* ===== CUSTOM CURSOR ===== */
+.coursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  display: flex;
+  padding: 4px 8px 5px;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  font-family: var(--font-mono), "SF Mono", SFMono-Regular, ui-monospace, monospace;
+  text-transform: uppercase;
+  font-size: 10px;
+  text-align: left;
+  pointer-events: none;
+  transform: translate3d(-9999px, -9999px, 0);
+  will-change: transform, opacity;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.coursor::before {
+  content: "";
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.coursor.is-visible {
+  opacity: 1;
+}
+@media (hover: none), (pointer: coarse) {
+  .coursor {
+    display: none !important;
+  }
+}
+
+/* ===== WAVE ANIMATION ===== */
+.wave-bar {
+  transition: color 0.26s ease;
+}
+.wave-mark.is-on .wave-bar {
+  animation: pulse 1.2s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+.wave-mark.is-on .wave-bar:nth-child(1) { animation-delay: 0s; }
+.wave-mark.is-on .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-mark.is-on .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-mark.is-on .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-mark.is-on .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+.wave-mark.is-on .wave-bar:nth-child(6) { animation-delay: 0.5s; }
+.wave-mark.is-on .wave-bar:nth-child(7) { animation-delay: 0.6s; }
+.wave-mark.is-on .wave-bar:nth-child(8) { animation-delay: 0.7s; }
+.wave-mark.is-on .wave-bar:nth-child(9) { animation-delay: 0.8s; }
+
+@keyframes pulse {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.7); }
+}
+
+
+
+/* ===== NAV CORNER EXPANSION ===== */
+.nav-hover-corner {
+  transition: all 0.2s ease;
+}
+.header-nav:hover .nav-hover-corner--tl { top: -6px; left: -6px; }
+.header-nav:hover .nav-hover-corner--tr { top: -6px; right: -6px; }
+.header-nav:hover .nav-hover-corner--bl { bottom: -6px; left: -6px; }
+.header-nav:hover .nav-hover-corner--br { bottom: -6px; right: -6px; }

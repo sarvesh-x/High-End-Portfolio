@@ -1,10 +1,12 @@
 "use client";
 
+import gsap from "gsap";
 import Lenis from "lenis";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const nav = ["cv", "github", "patreon", "linkedin", "email"];
+
 function useLenis() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -73,7 +75,115 @@ function useScramble(label: string) {
   return { text, scramble, reset };
 }
 
-function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLAnchorElement) => void; isDim: boolean }) {
+/* ─── HOVER SOUNDS ─── */
+function useHoverSounds() {
+  const ctxRef = useRef<AudioContext | null>(null);
+
+  function unlock() {
+    if (!ctxRef.current) ctxRef.current = new AudioContext();
+    if (ctxRef.current.state === "suspended") ctxRef.current.resume();
+  }
+
+  function play(type: "hover" | "tap" | "click", vol = 0.08) {
+    try {
+      const ctx = ctxRef.current;
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = type === "click" ? "square" : type === "tap" ? "triangle" : "sine";
+      osc.frequency.value = type === "hover" ? 800 : type === "tap" ? 600 : 400;
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.06);
+    } catch { /* silent */ }
+  }
+
+  useEffect(() => {
+    return () => { ctxRef.current?.close(); };
+  }, []);
+
+  return { play, unlock };
+}
+
+/* ─── CURSOR ─── */
+let _cursorEl: HTMLDivElement | null = null;
+let _cursorTimer: ReturnType<typeof setInterval> | null = null;
+let _cursorTarget: HTMLElement | null = null;
+
+function cursorShow(text: string) {
+  if (!_cursorEl) return;
+  if (_cursorTimer) clearInterval(_cursorTimer);
+  _cursorEl.textContent = "";
+  _cursorEl.classList.add("is-visible");
+  let n = 0;
+  const el = _cursorEl;
+  _cursorTimer = setInterval(() => {
+    n++;
+    el.textContent = text.slice(0, n);
+    if (n >= text.length) { clearInterval(_cursorTimer!); _cursorTimer = null; }
+  }, 18);
+}
+
+function cursorHide() {
+  if (!_cursorEl) return;
+  if (_cursorTimer) clearInterval(_cursorTimer);
+  _cursorTimer = null;
+  _cursorEl.classList.remove("is-visible");
+}
+
+function useCursor() {
+  useEffect(() => {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!fine) return;
+
+    const el = document.createElement("div");
+    el.className = "coursor";
+    document.body.appendChild(el);
+    _cursorEl = el;
+
+    const onMove = (e: PointerEvent) => {
+      el.style.transform = `translate3d(${e.clientX + 18}px, ${e.clientY + 18}px, 0)`;
+    };
+    window.addEventListener("pointermove", onMove);
+
+    document.addEventListener("mouseover", (e) => {
+      const t = (e.target as HTMLElement).closest("[data-cursor-text]") as HTMLElement | null;
+      if (t && t !== _cursorTarget) {
+        _cursorTarget = t;
+        cursorShow(t.getAttribute("data-cursor-text") || "");
+      }
+    }, true);
+
+    document.addEventListener("mouseout", (e) => {
+      const t = (e.target as HTMLElement).closest("[data-cursor-text]") as HTMLElement | null;
+      if (t && t === _cursorTarget) {
+        const rel = (e as MouseEvent).relatedTarget as HTMLElement | null;
+        const next = rel?.closest?.("[data-cursor-text]") as HTMLElement | null;
+        if (!next || next === t) {
+          _cursorTarget = null;
+          cursorHide();
+        } else {
+          _cursorTarget = next;
+          cursorShow(next.getAttribute("data-cursor-text") || "");
+        }
+      }
+    }, true);
+
+    return () => {
+      _cursorEl = null;
+      _cursorTarget = null;
+      if (_cursorTimer) clearInterval(_cursorTimer);
+      _cursorTimer = null;
+      window.removeEventListener("pointermove", onMove);
+      el.remove();
+    };
+  }, []);
+}
+
+function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLAnchorElement, label: string) => void; isDim: boolean }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const [fixedW, setFixedW] = useState(0);
@@ -86,11 +196,15 @@ function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLA
     }
   }, [fixedW]);
 
+  const cursorText = label === "cv" ? "Download CV" : label === "github" ? "View GitHub" : label === "patreon" ? "Support on Patreon" : label === "linkedin" ? "View LinkedIn" : label === "email" ? "Send email" : label;
+
   return (
     <a
       ref={ref}
       href="#"
       className={isDim ? "nav-item-dim" : ""}
+      data-cursor-text={cursorText}
+      data-sound-hover
       onMouseEnter={() => {
         if (ref.current) onEnter(ref.current, label);
         scramble();
@@ -111,6 +225,7 @@ function Nav() {
   const [hovered, setHovered] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
   const [box, setBox] = useState({ top: 0, left: 0, width: 0, height: 0 });
+  const sounds = useHoverSounds();
 
   function handleEnter(el: HTMLAnchorElement, label: string) {
     if (!navRef.current) return;
@@ -133,6 +248,7 @@ function Nav() {
   }, []);
 
   function toggleSound() {
+    sounds.unlock();
     if (soundOn) {
       audioRef.current?.pause();
       audioRef.current = null;
@@ -172,22 +288,19 @@ function Nav() {
         aria-pressed={soundOn}
         aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
         onClick={toggleSound}
+        data-cursor-text="Enable sound"
+        data-sound-click
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          {soundOn ? (
-            <>
-              <path d="M9 18V5l12-2v13" />
-              <circle cx="6" cy="18" r="3" />
-              <circle cx="18" cy="16" r="3" />
-            </>
-          ) : (
-            <>
-              <path d="M9 18V5l12-2v13" />
-              <circle cx="6" cy="18" r="3" />
-              <circle cx="18" cy="16" r="3" />
-              <line x1="3" y1="3" x2="21" y2="21" />
-            </>
-          )}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect className="wave-bar" x="2" y="10" width="2" height="6" rx="1" />
+          <rect className="wave-bar" x="5" y="7" width="2" height="12" rx="1" />
+          <rect className="wave-bar" x="8" y="4" width="2" height="18" rx="1" />
+          <rect className="wave-bar" x="11" y="8" width="2" height="10" rx="1" />
+          <rect className="wave-bar" x="14" y="6" width="2" height="14" rx="1" />
+          <rect className="wave-bar" x="17" y="9" width="2" height="8" rx="1" />
+          <rect className="wave-bar" x="20" y="4" width="2" height="18" rx="1" />
+          <rect className="wave-bar" x="23" y="7" width="2" height="12" rx="1" />
+          <rect className="wave-bar" x="26" y="10" width="2" height="6" rx="1" />
         </svg>
       </button>
 
@@ -316,14 +429,16 @@ function Corner({ className }: { className: string }) {
   );
 }
 
-function Hero() {
+function Hero({ scale, opacity }: { scale: MotionValue<number>; opacity: MotionValue<number> }) {
   const { text, scramble, reset } = useScramble("WRITE TO TELEGRAM");
 
   return (
-    <div className="hero-content">
+    <motion.div className="hero-content" style={{ scale, opacity }}>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p>I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
       <a className="hero-btn" href="#"
+        data-cursor-text="Send me message"
+        data-sound-hover
         onMouseEnter={scramble}
         onMouseLeave={reset}
       >
@@ -341,20 +456,85 @@ function Hero() {
         </svg>
         {text}
       </a>
+    </motion.div>
+  );
+}
+
+/* ─── LOADER ─── */
+function Loader({ onComplete }: { onComplete: () => void }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const pctRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const bar = barRef.current;
+    const pct = pctRef.current;
+    if (!root || !bar || !pct) return;
+
+    document.documentElement.classList.add("boot-loading");
+    document.body.classList.add("loader-active");
+
+    const progress = { value: 0 };
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        document.body.classList.remove("loader-active");
+        document.documentElement.classList.remove("boot-loading");
+        root.classList.add("is-hidden");
+        gsap.set(root, { clearProps: "all" });
+        onComplete();
+      },
+    });
+
+    tl.to(progress, {
+      value: 100,
+      duration: 2.2,
+      ease: "power2.inOut",
+      onUpdate: () => {
+        bar.style.width = `${progress.value}%`;
+        pct.textContent = `${Math.round(progress.value)}%`;
+      },
+    });
+
+    tl.to(root, { opacity: 0, duration: 0.35, ease: "power2.out" }, "+=0.2");
+
+    return () => { tl.kill(); };
+  }, [onComplete]);
+
+  return (
+    <div className="loader" ref={rootRef}>
+      <div className="loader-content">
+        <svg width="49" height="35" viewBox="0 0 49 35" fill="none" aria-hidden="true">
+          <path d="M14 7V35L0 28V0L14 7ZM31.5 7V35L17.5 28V0L31.5 7ZM49 7V35L35 28V0L49 7Z" fill="white" />
+        </svg>
+        <div className="loader-line">
+          <div className="loader-bar" ref={barRef} />
+        </div>
+        <span className="loader-pct" ref={pctRef}>0%</span>
+      </div>
     </div>
   );
 }
 
 export default function Page() {
   useLenis();
+  useCursor();
+  const [ready, setReady] = useState(false);
+  const { scrollYProgress } = useScroll();
+
+  const heroScale = useTransform(scrollYProgress, [0, 0.22], [1, 0.88]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
 
   useEffect(() => {
-    const targets = document.querySelectorAll("a, button, article, .skill-cloud span");
+    if (!ready) return;
+    const targets = document.querySelectorAll("a, button, article, .skill-cloud span, .hero-btn");
     targets.forEach((target) => target.setAttribute("data-magnetic", ""));
-  }, []);
+  }, [ready]);
 
   return (
     <>
+      {!ready && <Loader onComplete={() => setReady(true)} />}
       <div id="bg-video-stack" aria-hidden="true">
         <video id="bg-video" autoPlay muted loop playsInline preload="auto">
           <source src="/mbg.mp4" type="video/mp4" />
@@ -372,10 +552,10 @@ export default function Page() {
         <Corner className="corner-plus corner-frame-bl" />
         <Corner className="corner-plus corner-frame-br" />
         <ProgressBar />
-        <Hero />
+        <Hero scale={heroScale} opacity={heroOpacity} />
         <Hud />
         <ScrollIndicator />
       </div>
-    </>    
+    </>
   );
 }
