@@ -287,17 +287,7 @@ function useMotionText() {
         anims.push(bioTween);
       }
 
-      if (btnGroup) {
-        const blurClear = gsap.to(btnGroup,
-          {
-            filter: "blur(0px)",
-            duration: 0.3,
-            ease: "power2.out",
-            scrollTrigger: { trigger: specSection, start: "top 80%", end: "top 80%", scrub: 0 },
-          }
-        );
-        anims.push(blurClear);
-      }
+
 
       specButtons.forEach((btn, i) => {
         const btnTween = gsap.fromTo(btn,
