@@ -159,7 +159,7 @@ html:hover .cursor-dot {
   padding: 0 28px 0 22px;
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.035), transparent 85%, transparent 86%, rgba(255, 255, 255, 0.035)),
-    rgba(5, 6, 6, 0.62);
+    rgba(5, 6, 6, 0.35);
   backdrop-filter: blur(20px);
 }
 
@@ -451,11 +451,15 @@ html:hover .cursor-dot {
   transform-origin: center center;
 }
 
+.hero-logo {
+  display: block;
+  margin: 0 auto 16px;
+}
 .hero-content h1 {
   margin: 0;
   font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
   font-weight: 300;
-  font-size: clamp(32px, 5vw, 64px);
+  font-size: clamp(24px, 3.5vw, 42px);
   line-height: 1.15;
   letter-spacing: 2px;
   color: var(--bone);
@@ -491,7 +495,7 @@ html:hover .cursor-dot {
   text-transform: uppercase;
   color: var(--bone);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 18px 20px;
+  padding: 10px 20px;
   pointer-events: auto;
   transition: border-color 0.2s ease, opacity 1s ease;
 }
@@ -525,22 +529,22 @@ html:hover .cursor-dot {
 
 .corner-btn {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
   fill: rgba(244, 240, 232, 0.86);
   pointer-events: none;
   transition: all 0.2s ease;
 }
 
-.corner-btn-tl { top: -5px; left: -5px; }
-.corner-btn-tr { top: -5px; right: -5px; }
-.corner-btn-bl { bottom: -5px; left: -5px; }
-.corner-btn-br { bottom: -5px; right: -5px; }
+.corner-btn-tl { top: -4px; left: -4px; }
+.corner-btn-tr { top: -4px; right: -4px; }
+.corner-btn-bl { bottom: -4px; left: -4px; }
+.corner-btn-br { bottom: -4px; right: -4px; }
 
-.hero-btn:hover .corner-btn-tl { top: -9px; left: -9px; }
-.hero-btn:hover .corner-btn-tr { top: -9px; right: -9px; }
-.hero-btn:hover .corner-btn-bl { bottom: -9px; left: -9px; }
-.hero-btn:hover .corner-btn-br { bottom: -9px; right: -9px; }
+.hero-btn:hover .corner-btn-tl { top: -8px; left: -8px; }
+.hero-btn:hover .corner-btn-tr { top: -8px; right: -8px; }
+.hero-btn:hover .corner-btn-bl { bottom: -8px; left: -8px; }
+.hero-btn:hover .corner-btn-br { bottom: -8px; right: -8px; }
 
 .hero-tags {
   display: flex;
@@ -573,10 +577,11 @@ html:hover .cursor-dot {
 
 .corner-plus {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
   fill: rgba(244, 240, 232, 0.86);
   pointer-events: none;
+  transition: all 0.2s ease;
 }
 
 .corner-plus-bl { bottom: -4px; left: -4px; }
@@ -1039,14 +1044,14 @@ html:hover .cursor-dot {
   position: relative;
   cursor: pointer;
 }
-.imageMask .topleft { position: absolute; top: -5px; left: -5px; transition: 0.3s; }
-.imageMask .topright { position: absolute; top: -5px; right: -5px; transition: 0.3s; }
-.imageMask .bottomleft { position: absolute; bottom: -5px; left: -5px; transition: 0.3s; }
-.imageMask .bottomright { position: absolute; bottom: -5px; right: -5px; transition: 0.3s; }
-.imageMask:hover .topleft { top: -10px; left: -10px; transition: 0.3s; }
-.imageMask:hover .topright { top: -10px; right: -10px; transition: 0.3s; }
-.imageMask:hover .bottomleft { bottom: -10px; left: -10px; transition: 0.3s; }
-.imageMask:hover .bottomright { bottom: -10px; right: -10px; transition: 0.3s; }
+.imageMask .topleft { position: absolute; top: -4px; left: -4px; transition: 0.2s; }
+.imageMask .topright { position: absolute; top: -4px; right: -4px; transition: 0.2s; }
+.imageMask .bottomleft { position: absolute; bottom: -4px; left: -4px; transition: 0.2s; }
+.imageMask .bottomright { position: absolute; bottom: -4px; right: -4px; transition: 0.2s; }
+.imageMask:hover .topleft { top: -8px; left: -8px; transition: 0.2s; }
+.imageMask:hover .topright { top: -8px; right: -8px; transition: 0.2s; }
+.imageMask:hover .bottomleft { bottom: -8px; left: -8px; transition: 0.2s; }
+.imageMask:hover .bottomright { bottom: -8px; right: -8px; transition: 0.2s; }
 .c-glitch,
 .c-glitch__img {
   background-repeat: no-repeat;
@@ -1186,10 +1191,10 @@ html:hover .cursor-dot {
   text-transform: uppercase;
 }
 #cases .btn:hover { border-color: var(--bone); transition: 0.2s; }
-#cases .btn .topleft { position: absolute; top: -3px; left: -3px; transition: 0.2s; }
-#cases .btn .topright { position: absolute; top: -3px; right: -3px; transition: 0.2s; }
-#cases .btn .bottomleft { position: absolute; bottom: -3px; left: -3px; transition: 0.2s; }
-#cases .btn .bottomright { position: absolute; bottom: -3px; right: -3px; transition: 0.2s; }
+#cases .btn .topleft { position: absolute; top: -4px; left: -4px; transition: 0.2s; }
+#cases .btn .topright { position: absolute; top: -4px; right: -4px; transition: 0.2s; }
+#cases .btn .bottomleft { position: absolute; bottom: -4px; left: -4px; transition: 0.2s; }
+#cases .btn .bottomright { position: absolute; bottom: -4px; right: -4px; transition: 0.2s; }
 #cases .btn:hover .topleft { top: -8px; left: -8px; transition: 0.2s; }
 #cases .btn:hover .topright { top: -8px; right: -8px; transition: 0.2s; }
 #cases .btn:hover .bottomleft { bottom: -8px; left: -8px; transition: 0.2s; }

@@ -32,7 +32,7 @@ function useLenis() {
   }, []);
 }
 
-const chars = "0123456789";
+const chars = "कखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसहािीुूृेैोौ";
 
 function useScramble(label: string) {
   const [text, setText] = useState(label);
@@ -58,13 +58,13 @@ function useScramble(label: string) {
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = null;
       }
-      i += 0.5;
-    }, 30);
+      i += 0.35;
+    }, 20);
     timeoutRef.current = setTimeout(() => {
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = null;
       setText(label);
-    }, 400);
+    }, 600);
   }
 
   function reset() {
@@ -220,7 +220,7 @@ function useMotionText() {
 
     els.forEach((el) => {
       const isContainer = el.matches(".container.vse");
-      const isWordSplit = el.matches("h2, h3, h4, .bio, .hero-btn span, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
+      const isWordSplit = el.matches("h2, h3, h4, .bio, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
 
         if (isContainer) {
         const tween = gsap.fromTo(el,
@@ -253,19 +253,6 @@ function useMotionText() {
         );
         anims.push(tween);
 
-        if (el.matches(".hero-btn span")) {
-          const btn = el.closest(".hero-btn") as HTMLElement;
-          if (btn) {
-            gsap.set(btn, { filter: "blur(10px)" });
-            const btnTween = gsap.to(btn, {
-              filter: "blur(0px)",
-              duration: 0.55,
-              ease: "power2.out",
-              scrollTrigger: { trigger: el, start: "top bottom", end: "center center", scrub: 1 },
-            });
-            anims.push(btnTween);
-          }
-        }
       } else {
         const tween = gsap.fromTo(el,
           { filter: "blur(10px)", opacity: 0 },
@@ -511,7 +498,7 @@ function ProgressBar() {
 
 function ScrollIndicator() {
   const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
   return (
     <motion.div className="scroll-indicator" style={{ opacity }}>
@@ -526,39 +513,74 @@ function ScrollIndicator() {
 
 function Corner({ className }: { className: string }) {
   return (
-    <svg className={className} width="8" height="8" viewBox="0 0 5 5" fill="none">
+    <svg className={className} width="5" height="5" viewBox="0 0 5 5" fill="none">
       <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
     </svg>
   );
 }
 
-function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
-  const { text, scramble, reset } = useScramble("WRITE TO TELEGRAM");
+/* ─── SCRAMBLE BUTTON ─── */
+function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href }: {
+  text: string;
+  cursorText?: string;
+  secondary?: boolean;
+  revealOnScroll?: boolean;
+  href?: string;
+}) {
+  const { text: disp, scramble, reset } = useScramble(text);
+  const [fixedW, setFixedW] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const btnRef = useRef<HTMLAnchorElement>(null);
+
+  const measured = useCallback((el: HTMLSpanElement | null) => {
+    if (el && !fixedW) setFixedW(el.offsetWidth + 4);
+  }, [fixedW]);
+
+  useEffect(() => {
+    if (!revealOnScroll || !btnRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setRevealed(true); observer.disconnect(); }
+    }, { threshold: 0.1 });
+    observer.observe(btnRef.current);
+    return () => observer.disconnect();
+  }, [revealOnScroll]);
+
+  const sStyle = revealOnScroll
+    ? { filter: revealed ? "blur(0px)" : "blur(10px)", opacity: revealed ? 1 : 0, transition: "filter 0.6s ease, opacity 0.6s ease" }
+    : undefined;
 
   return (
+    <a
+      ref={btnRef}
+      className={"hero-btn" + (secondary ? " secondary" : "")}
+      href={href ?? "#"}
+      data-cursor-text={cursorText ?? text}
+      data-sound-hover
+      style={sStyle}
+      onMouseEnter={scramble}
+      onMouseLeave={reset}
+    >
+      <Corner className="corner-btn corner-btn-tl" />
+      <Corner className="corner-btn corner-btn-tr" />
+      <Corner className="corner-btn corner-btn-bl" />
+      <Corner className="corner-btn corner-btn-br" />
+      <span ref={measured} style={{ display: "inline-block", width: fixedW || undefined, overflow: "hidden", whiteSpace: "nowrap" }}>{disp}</span>
+    </a>
+  );
+}
+
+function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
+  return (
     <div className="hero-content" ref={heroRef}>
+      <svg className="hero-logo" width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="6" y="8" width="6" height="32" rx="2" fill="currentColor" opacity="0.9" />
+        <rect x="16" y="4" width="6" height="36" rx="2" fill="currentColor" opacity="0.7" />
+        <rect x="26" y="12" width="6" height="28" rx="2" fill="currentColor" opacity="0.5" />
+        <rect x="36" y="18" width="6" height="22" rx="2" fill="currentColor" opacity="0.3" />
+      </svg>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p>I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
-      <a className="hero-btn" href="#"
-        data-cursor-text="Send me message"
-        data-sound-hover
-        onMouseEnter={scramble}
-        onMouseLeave={reset}
-      >
-        <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none">
-          <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
-        </svg>
-        <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none">
-          <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
-        </svg>
-        <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none">
-          <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
-        </svg>
-        <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none">
-          <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
-        </svg>
-        {text}
-      </a>
+      <ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" />
     </div>
   );
 }
@@ -639,24 +661,8 @@ function SpecSection() {
           I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
         <ul className="btn-group">
-          <li>
-            <a className="hero-btn" href="#" data-cursor-text="Send me message" data-sound-hover>
-              <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <span data-motion-text>WRITE TO TELEGRAM</span>
-            </a>
-          </li>
-          <li>
-            <a className="hero-btn secondary" href="#" data-cursor-text="Download CV" data-sound-hover>
-              <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-              <span data-motion-text>DOWNLOAD CV</span>
-            </a>
-          </li>
+          <li><ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" revealOnScroll /></li>
+          <li><ScrambleBtn text="DOWNLOAD CV" cursorText="Download CV" secondary revealOnScroll /></li>
         </ul>
       </div>
     </section>
@@ -712,13 +718,7 @@ const GLITCH_GRADIENTS = [
   "linear-gradient(135deg, #1c1c2e, #2a2a40, #3a3a52)",
 ];
 
-function CornerBtn({ className }: { className?: string }) {
-  return (
-    <svg className={className} width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="#D9D9D9" />
-    </svg>
-  );
-}
+
 
 function CasesSection() {
   return (
@@ -795,10 +795,10 @@ function CasesSection() {
                 <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
                 <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
               </div>
-              <CornerBtn className="topleft" />
-              <CornerBtn className="topright" />
-              <CornerBtn className="bottomleft" />
-              <CornerBtn className="bottomright" />
+              <Corner className="topleft" />
+              <Corner className="topright" />
+              <Corner className="bottomleft" />
+              <Corner className="bottomright" />
             </div>
             <div className="caseInfo" data-motion-text>
               <ul className="tags">
@@ -807,10 +807,10 @@ function CasesSection() {
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
               <a href={c.href} className="btn" data-cursor-text="View case">
-                <CornerBtn className="topleft" />
-                <CornerBtn className="topright" />
-                <CornerBtn className="bottomleft" />
-                <CornerBtn className="bottomright" />
+                <Corner className="topleft" />
+                <Corner className="topright" />
+                <Corner className="bottomleft" />
+                <Corner className="bottomright" />
                 <span>VIEW CASE</span>
               </a>
             </div>
@@ -900,15 +900,7 @@ function LastBlocks() {
                   </svg>
                   <h4>{p.name}{p.soon && <i className="soon">  soon</i>}</h4>
                   <p>{p.desc}</p>
-                  {p.href && (
-                    <a href={p.href} className="hero-btn">
-                      <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                      <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                      <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                      <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                      <span data-motion-text>View project</span>
-                    </a>
-                  )}
+                  {p.href && <ScrambleBtn text="View project" href={p.href} revealOnScroll />}
                 </li>
               ))}
             </ul>
