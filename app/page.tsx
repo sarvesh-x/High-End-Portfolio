@@ -626,7 +626,7 @@ function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) 
         <rect x="36" y="18" width="6" height="22" rx="2" fill="currentColor" opacity="0.3" />
       </svg>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
-      <p>I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
+      <p className="p">I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
       <ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" />
     </div>
   );
@@ -704,8 +704,8 @@ function SpecSection() {
         <h1 data-motion-text>
           <b>I specialize</b> in<span className="icon-android"></span>full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
         </h1>
-        <p className="bio" data-motion-text>
-          I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
+        <p className="p" data-motion-text>
+          I&apos;m currently open to full-time Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
         <ul className="btn-group" data-motion-text>
           <li><ScrambleBtn className="specialize-btn-1" text="WRITE TO TELEGRAM" cursorText="Send me message" revealOnScroll /></li>
