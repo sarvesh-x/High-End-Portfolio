@@ -271,6 +271,7 @@ function useMotionText() {
     const specSection = document.querySelector(".specialize-section");
     if (specSection) {
       const specBio = specSection.querySelector(".bio");
+      const btnGroup = specSection.querySelector(".btn-group");
       const specButtons = specSection.querySelectorAll(".btn-group, .btn-group li");
       
       if (specBio) {
@@ -284,6 +285,18 @@ function useMotionText() {
           }
         );
         anims.push(bioTween);
+      }
+
+      if (btnGroup) {
+        const blurClear = gsap.to(btnGroup,
+          {
+            filter: "blur(0px)",
+            duration: 0.3,
+            ease: "power2.out",
+            scrollTrigger: { trigger: specSection, start: "top 80%", end: "top 80%", scrub: 0 },
+          }
+        );
+        anims.push(blurClear);
       }
 
       specButtons.forEach((btn, i) => {
@@ -688,9 +701,9 @@ function SpecSection() {
           <li>NEXT.JS</li>
           <li>CLOUD</li>
         </ul>
-        <h2 data-motion-text>
-          <b>I specialize</b><b> in</b><img src="/android.png" alt="Android" className="icon-android" style={{ width: '1.5em', height: '1.5em', display: 'inline-block', verticalAlign: 'middle' }} /><span className="icon-apple"></span> full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
-        </h2>
+        <h1 data-motion-text>
+          <b>I specialize</b> in<span className="icon-android"></span>full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
+        </h1>
         <p className="bio" data-motion-text>
           I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
