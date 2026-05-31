@@ -187,6 +187,31 @@ function useCursor() {
 }
 
 /* ─── MOTION TEXT REVEAL ─── */
+function deepSplit(node: Node): Node {
+  if (node instanceof SVGElement) return node.cloneNode(true);
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.textContent || "";
+    const frag = document.createDocumentFragment();
+    const parts = text.split(/(\s+)/);
+    parts.forEach((part) => {
+      if (/^\s+$/.test(part)) {
+        frag.appendChild(document.createTextNode(part));
+      } else if (part) {
+        const span = document.createElement("span");
+        span.className = "motion-word";
+        span.textContent = part;
+        frag.appendChild(span);
+      }
+    });
+    return frag;
+  }
+  const clone = (node as Element).cloneNode(false);
+  Array.from(node.childNodes).forEach((child) => {
+    clone.appendChild(deepSplit(child));
+  });
+  return clone;
+}
+
 function useMotionText() {
   useEffect(() => {
     const els = document.querySelectorAll("[data-motion-text]");
@@ -195,7 +220,7 @@ function useMotionText() {
 
     els.forEach((el) => {
       const isContainer = el.matches(".container.vse");
-      const isWordSplit = el.matches("h2, h3, h4, .bio, .hero-btn span, .list li p, .list li span.date, .list li h4 span");
+      const isWordSplit = el.matches("h2, h3, h4, .bio, .hero-btn span, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
 
         if (isContainer) {
         const tween = gsap.fromTo(el,
@@ -209,30 +234,34 @@ function useMotionText() {
         );
         anims.push(tween);
       } else if (isWordSplit) {
-        const words = el.textContent?.trim().split(/\s+/) || [];
-        if (!words.length) return;
-        el.innerHTML = words.map((w) => `<span class="motion-word">${w}</span>`).join(" ");
-        const spans = el.querySelectorAll(".motion-word");
-        const tween = gsap.fromTo(spans,
-          { filter: "blur(10px)" },
+        const cloned = deepSplit(el);
+        el.innerHTML = "";
+        el.appendChild(cloned);
+
+        const targets = el.querySelectorAll(".motion-word, [class^='icon-'], [class*=' icon-'], svg");
+        if (!targets.length) return;
+
+        const stagger = el.matches("#cases .container") ? 0.04 : 0.08;
+        const tween = gsap.fromTo(targets,
+          { filter: "blur(10px)", opacity: 0 },
           {
-            filter: "blur(0px)",
-            duration: 0.55, stagger: 0.08,
+            filter: "blur(0px)", opacity: 1,
+            duration: 0.55, stagger,
             ease: "power2.out",
-            scrollTrigger: { trigger: el, start: "top 85%", end: "top 65%", scrub: 1 },
+            scrollTrigger: { trigger: el, start: "top bottom", end: "center center", scrub: 1 },
           }
         );
         anims.push(tween);
 
         if (el.matches(".hero-btn span")) {
-          const btn = el.closest(".hero-btn");
+          const btn = el.closest(".hero-btn") as HTMLElement;
           if (btn) {
             gsap.set(btn, { filter: "blur(10px)" });
             const btnTween = gsap.to(btn, {
               filter: "blur(0px)",
               duration: 0.55,
               ease: "power2.out",
-            scrollTrigger: { trigger: el, start: "top 85%", end: "top 15%", scrub: 1 },
+              scrollTrigger: { trigger: el, start: "top bottom", end: "center center", scrub: 1 },
             });
             anims.push(btnTween);
           }
@@ -604,7 +633,7 @@ function SpecSection() {
           <li>CLOUD</li>
         </ul>
         <h2 data-motion-text>
-          <b>I specialize in</b> full stack development, building <b>scalable</b> web applications, and crafting <b>seamless</b> user experiences
+          <b>I specialize</b><b> in</b><span className="icon-android"></span><span className="icon-apple"></span> full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
         </h2>
         <p className="bio" data-motion-text>
           I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
@@ -641,98 +670,152 @@ const CASES = [
     title: "Fintech Design System",
     desc: "A scalable fintech design system for mobile and web products, built to improve consistency, speed up delivery, and support complex financial flows.",
     href: "#",
-    category: "App design",
   },
   {
     tags: ["App design"],
     title: "CrocoWallet",
     desc: "A Telegram-based crypto banking mini app with card issuance, wallet management, rewards, and referral flows.",
     href: "#",
-    category: "App design",
   },
   {
     tags: ["App design"],
     title: "Crypto Portfolio",
     desc: "A crypto portfolio and wallet app for tracking assets, monitoring market movement, and managing balances in one interface.",
     href: "#",
-    category: "App design",
   },
   {
     tags: ["Concept"],
     title: "Telegram wallet",
     desc: "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
     href: "#",
-    category: "Concept",
   },
   {
     tags: ["App design", "Dashboard", "Landing"],
     title: "Cunex crypto widget",
     desc: "A crypto exchange widget, dashboard, and landing experience designed to support onboarding, KYC, and transaction monitoring.",
     href: "#",
-    category: "App design",
   },
   {
     tags: ["Icons", "Design System"],
     title: "Crypto Icons Library",
     desc: "A reusable crypto icon library for product teams, available in SVG, sprite, webfont, and 3D formats.",
     href: "#",
-    category: "Icons",
   },
 ];
 
+const GLITCH_GRADIENTS = [
+  "linear-gradient(135deg, #0f1923, #1a2a3a, #243b55)",
+  "linear-gradient(135deg, #1a1a2e, #2d2d44, #16213e)",
+  "linear-gradient(135deg, #0d1b2a, #1b2838, #2d4059)",
+  "linear-gradient(135deg, #1e0a1e, #3a0e3a, #4a154b)",
+  "linear-gradient(135deg, #0a1628, #142850, #1e3a6e)",
+  "linear-gradient(135deg, #1c1c2e, #2a2a40, #3a3a52)",
+];
+
+function CornerBtn({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="#D9D9D9" />
+    </svg>
+  );
+}
+
 function CasesSection() {
   return (
-    <section className="section cases-section" id="cases">
-      <div className="container">
-        <div className="section-header">
-          <h2 className="section-title" data-motion-text>
-            <b>Selected</b> cases
+    <section className="section" id="cases">
+      <div className="container" data-motion-text>
+        <div className="titleGroup">
+          <h2>
+            <b>Selected case studies</b>
+            <a href="#" aria-label="GitHub" data-sound-hover><span className="icon-github"></span></a>
+            <a href="#" aria-label="LinkedIn" data-sound-hover><span className="icon-linkedin"></span></a>
+            <br />
+            I have more than <b>10 years of experience</b>
           </h2>
-          <div className="section-header-links">
-            <a className="section-link" href="#" aria-label="GitHub" data-sound-hover>
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-              </svg>
-            </a>
-            <a className="section-link" href="#" aria-label="LinkedIn" data-sound-hover>
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
-            </a>
+        </div>
+        <ul className="tags" data-motion-text>
+          <li>Freelance</li>
+          <li>RemoteWork</li>
+          <li>Office</li>
+          <li>Personal Projects</li>
+        </ul>
+        <ul className="logoGroup">
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25 0L50 28H0L25 0Z" fill="white" opacity="0.85" />
+              <circle cx="25" cy="18" r="4" fill="#0f0f0f" />
+            </svg>
+          </li>
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="25" cy="14" rx="10" ry="3.5" stroke="white" strokeWidth="1.8" opacity="0.6" />
+              <ellipse cx="25" cy="14" rx="10" ry="3.5" stroke="white" strokeWidth="1.8" opacity="0.6" transform="rotate(60 25 14)" />
+              <ellipse cx="25" cy="14" rx="10" ry="3.5" stroke="white" strokeWidth="1.8" opacity="0.6" transform="rotate(120 25 14)" />
+              <circle cx="25" cy="14" r="2.5" fill="white" opacity="0.85" />
+            </svg>
+          </li>
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="2" width="42" height="24" rx="3" stroke="white" strokeWidth="1.5" opacity="0.6" />
+              <text x="25" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="600" fontFamily="Arial" opacity="0.9">TS</text>
+            </svg>
+          </li>
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25 2L46 14L25 26L4 14L25 2Z" stroke="white" strokeWidth="1.5" opacity="0.6" fill="none" />
+              <text x="25" y="18" textAnchor="middle" fill="white" fontSize="11" fontWeight="600" fontFamily="Arial" opacity="0.9">node</text>
+            </svg>
+          </li>
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="6" width="34" height="16" rx="2" stroke="white" strokeWidth="1.5" opacity="0.6" fill="none" />
+              <rect x="12" y="10" width="6" height="4" rx="1" fill="white" opacity="0.7" />
+              <rect x="20" y="10" width="6" height="4" rx="1" fill="white" opacity="0.7" />
+              <rect x="28" y="10" width="6" height="4" rx="1" fill="white" opacity="0.7" />
+              <rect x="36" y="10" width="4" height="4" rx="1" fill="white" opacity="0.7" />
+            </svg>
+          </li>
+          <li>
+            <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="25" cy="14" rx="12" ry="6" stroke="white" strokeWidth="1.5" opacity="0.4" fill="none" />
+              <ellipse cx="25" cy="14" rx="8" ry="4" stroke="white" strokeWidth="1.5" opacity="0.6" fill="none" />
+              <path d="M25 8L30 14L25 20L20 14L25 8Z" fill="white" opacity="0.85" />
+            </svg>
+          </li>
+        </ul>
+      </div>
+      <div className="caseList">
+        {CASES.map((c, i) => (
+          <div className="case" key={i}>
+            <div className="imageMask" data-cursor-text="Preview">
+              <div className="c-glitch" style={{ backgroundImage: GLITCH_GRADIENTS[i] }}>
+                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+              </div>
+              <CornerBtn className="topleft" />
+              <CornerBtn className="topright" />
+              <CornerBtn className="bottomleft" />
+              <CornerBtn className="bottomright" />
+            </div>
+            <div className="caseInfo" data-motion-text>
+              <ul className="tags">
+                {c.tags.map((tag) => <li key={tag}>{tag}</li>)}
+              </ul>
+              <h3 data-motion-text>{c.title}</h3>
+              <p data-motion-text>{c.desc}</p>
+              <a href={c.href} className="btn" data-cursor-text="View case">
+                <CornerBtn className="topleft" />
+                <CornerBtn className="topright" />
+                <CornerBtn className="bottomleft" />
+                <CornerBtn className="bottomright" />
+                <span>VIEW CASE</span>
+              </a>
+            </div>
           </div>
-        </div>
-        <p className="section-sub" data-motion-text>
-          I have more than <b>15 years</b> of experience
-        </p>
-        <p className="section-tagline" data-motion-text>
-          Freelance, office, remote work, personal projects...
-        </p>
-        <div className="cases-grid">
-          {CASES.map((c, i) => (
-            <article className="project-card" key={i} data-motion-text>
-              <div className="project-image">
-                <div className="project-placeholder" />
-              </div>
-              <div className="project-info">
-                <div className="project-tags">
-                  {c.tags.map((tag) => <span key={tag}>{tag}</span>)}
-                </div>
-                <h3 className="project-name">{c.title}</h3>
-                <p className="project-desc">{c.desc}</p>
-                <div style={{ position: "relative" }}>
-                  <a className="project-btn" href={c.href} data-cursor-text="View case" data-sound-hover>
-                    <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                    <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                    <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                    <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
-                    VIEW CASE
-                  </a>
-                </div>
-                <span className="case-cat">{c.category}</span>
-              </div>
-            </article>
-          ))}
-        </div>
+        ))}
       </div>
     </section>
   );
@@ -845,25 +928,45 @@ export default function Page() {
 
   useEffect(() => {
     const el = heroRef.current;
-    if (el) {
-      el.style.setProperty("--hero-scale", "0.85");
-      el.style.setProperty("--hero-opacity", "1");
-      el.style.removeProperty("--hero-blur");
-    }
+    if (!el) return;
+    const btns = [...el.querySelectorAll<HTMLElement>(".hero-btn")];
+    el.style.setProperty("--hero-scale", "0.85");
+    el.style.setProperty("--hero-opacity", "1");
+    el.style.removeProperty("--hero-blur");
+
+    let prevE = -1;
+
     const unsub = scrollYProgress.on("change", (v) => {
-      if (!el) return;
       const n = Math.min(Math.max(v / 0.55, 0), 1);
       const e = 1 - Math.pow(1 - n, 3);
-      el.style.setProperty("--hero-scale", String(0.85 - e * 0.25));
-      el.style.setProperty("--hero-opacity", String(1 - e));
-      if (e > 0) {
-        el.style.setProperty("--hero-blur", `blur(${e * 15}px)`);
-      } else {
-        el.style.removeProperty("--hero-blur");
+
+      if (e !== prevE) {
+        el.style.setProperty("--hero-scale", String(0.85 - e * 0.25));
+        el.style.setProperty("--hero-opacity", String(1 - e));
+        el.style.setProperty("--hero-blur", e > 0 ? `blur(${e * 15}px)` : "");
+        prevE = e;
       }
     });
     return unsub;
   }, [scrollYProgress]);
+
+  useEffect(() => {
+    const btns = [...document.querySelectorAll<HTMLElement>(".hero-content .hero-btn")];
+    const spec = document.getElementById("spec");
+    if (!spec || !btns.length) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        for (const btn of btns) {
+          btn.style.opacity = entry.isIntersecting ? "0.25" : "";
+          btn.style.pointerEvents = entry.isIntersecting ? "none" : "";
+          btn.style.borderColor = entry.isIntersecting ? "rgba(255,255,255,0.06)" : "";
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(spec);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!ready) return;
