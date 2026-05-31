@@ -597,9 +597,9 @@ html:hover .cursor-dot {
 .telemetry-corner-br { right: -4px; bottom: -4px; }
 
 .progress-wrap {
-  position: absolute;
+  position: fixed;
   top: 50%;
-  left: 0;
+  right: 0;
   transform: translateY(-50%);
   display: flex;
   flex-direction: row;
