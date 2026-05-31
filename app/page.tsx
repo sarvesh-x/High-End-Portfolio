@@ -1,9 +1,12 @@
 "use client";
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const nav = ["cv", "github", "patreon", "linkedin", "email"];
 
@@ -179,6 +182,50 @@ function useCursor() {
       _cursorTimer = null;
       window.removeEventListener("pointermove", onMove);
       el.remove();
+    };
+  }, []);
+}
+
+/* ─── MOTION TEXT REVEAL ─── */
+function useMotionText() {
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-motion-text]");
+    if (!els.length) return;
+    const anims: gsap.core.Tween[] = [];
+
+    els.forEach((el) => {
+      const isHeading = el.matches("h2, h3, .bio");
+      if (isHeading) {
+        const words = el.textContent?.trim().split(/\s+/) || [];
+        if (!words.length) return;
+        el.innerHTML = words.map((w) => `<span class="motion-word">${w}</span>`).join(" ");
+        const spans = el.querySelectorAll(".motion-word");
+        const tween = gsap.fromTo(spans,
+          { opacity: 0.16, y: 28, filter: "blur(10px)" },
+          {
+            opacity: 1, y: 0, filter: "blur(0px)",
+            duration: 0.55, stagger: 0.08,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 85%", end: "top 45%", scrub: 1 },
+          }
+        );
+        anims.push(tween);
+      } else {
+        const tween = gsap.fromTo(el,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 85%", scrub: 1 },
+          }
+        );
+        anims.push(tween);
+      }
+    });
+
+    return () => {
+      anims.forEach((a) => a.scrollTrigger?.kill());
     };
   }, []);
 }
@@ -429,11 +476,11 @@ function Corner({ className }: { className: string }) {
   );
 }
 
-function Hero({ scale, opacity }: { scale: MotionValue<number>; opacity: MotionValue<number> }) {
+function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
   const { text, scramble, reset } = useScramble("WRITE TO TELEGRAM");
 
   return (
-    <motion.div className="hero-content" style={{ scale, opacity }}>
+    <div className="hero-content" ref={heroRef}>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p>I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
       <a className="hero-btn" href="#"
@@ -456,7 +503,7 @@ function Hero({ scale, opacity }: { scale: MotionValue<number>; opacity: MotionV
         </svg>
         {text}
       </a>
-    </motion.div>
+    </div>
   );
 }
 
@@ -517,14 +564,78 @@ function Loader({ onComplete }: { onComplete: () => void }) {
   );
 }
 
+/* ─── SPEC SECTION ─── */
+function SpecSection() {
+  return (
+    <section className="section spec-section" id="spec">
+      <div className="container">
+        <ul className="tags" data-motion-text>
+          <li>REACT</li>
+          <li>NODE.JS</li>
+          <li>TYPESCRIPT</li>
+          <li>NEXT.JS</li>
+          <li>CLOUD</li>
+        </ul>
+        <h2 data-motion-text>
+          <b>I specialize in</b> full stack development, building <b>scalable</b> web applications, and crafting <b>seamless</b> user experiences
+        </h2>
+        <p className="bio" data-motion-text>
+          I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
+        </p>
+        <ul className="btn-group" data-motion-text>
+          <li>
+            <a className="hero-btn" href="#" data-cursor-text="Send me message" data-sound-hover>
+              <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <span>WRITE TO TELEGRAM</span>
+            </a>
+          </li>
+          <li>
+            <a className="hero-btn secondary" href="#" data-cursor-text="Download CV" data-sound-hover>
+              <svg className="corner-btn corner-btn-tl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-tr" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-bl" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <svg className="corner-btn corner-btn-br" width="8" height="8" viewBox="0 0 5 5" fill="none"><path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" /></svg>
+              <span>DOWNLOAD CV</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default function Page() {
   useLenis();
   useCursor();
+  useMotionText();
   const [ready, setReady] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
-  const heroScale = useTransform(scrollYProgress, [0, 0.22], [1, 0.88]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.22], [1, 0]);
+  useEffect(() => {
+    const el = heroRef.current;
+    if (el) {
+      el.style.setProperty("--hero-scale", "1");
+      el.style.setProperty("--hero-opacity", "1");
+      el.style.removeProperty("--hero-blur");
+    }
+    const unsub = scrollYProgress.on("change", (v) => {
+      if (!el) return;
+      const n = Math.min(Math.max(v / 0.55, 0), 1);
+      const e = 1 - Math.pow(1 - n, 3);
+      el.style.setProperty("--hero-scale", String(1 - e * 0.4));
+      el.style.setProperty("--hero-opacity", String(1 - e));
+      if (e > 0) {
+        el.style.setProperty("--hero-blur", `blur(${e * 15}px)`);
+      } else {
+        el.style.removeProperty("--hero-blur");
+      }
+    });
+    return unsub;
+  }, [scrollYProgress]);
 
   useEffect(() => {
     if (!ready) return;
@@ -552,9 +663,12 @@ export default function Page() {
         <Corner className="corner-plus corner-frame-bl" />
         <Corner className="corner-plus corner-frame-br" />
         <ProgressBar />
-        <Hero scale={heroScale} opacity={heroOpacity} />
+        <Hero heroRef={heroRef} />
         <Hud />
         <ScrollIndicator />
+      </div>
+      <div className="scroll-content">
+        <SpecSection />
       </div>
     </>
   );

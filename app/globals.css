@@ -430,6 +430,11 @@ html:hover .cursor-dot {
   gap: 20px;
   max-width: 680px;
   padding: 0 40px;
+  transform: scale(var(--hero-scale, 1));
+  opacity: var(--hero-opacity, 1);
+  filter: var(--hero-blur, none);
+  will-change: transform, opacity;
+  transform-origin: center center;
 }
 
 .hero-content h1 {
@@ -845,6 +850,77 @@ html:hover .cursor-dot {
   color: rgba(244, 240, 232, 0.4);
   text-align: center;
   margin: 0 0 48px;
+}
+
+/* ===== SPEC SECTION ===== */
+.container {
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+}
+.tags li {
+  font-family: var(--font-mono), "SF Mono", SFMono-Regular, ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.spec-section {
+  text-align: center;
+}
+.spec-section h2 {
+  font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 300;
+  font-size: clamp(20px, 2.8vw, 34px);
+  line-height: 1.2;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--bone);
+  margin: 0;
+  max-width: 620px;
+}
+.spec-section h2 b {
+  font-weight: 700;
+}
+.spec-section .bio {
+  text-align: center;
+  max-width: 540px;
+  margin: 0;
+}
+.spec-section .btn-group {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.spec-section .btn-group .hero-btn {
+  font-family: var(--font-mono), "SF Mono", SFMono-Regular, ui-monospace, monospace;
+  font-size: 11px;
+  padding: 14px 18px;
+  white-space: nowrap;
+}
+.motion-word {
+  display: inline-block;
+  white-space: pre;
 }
 
 .project-list {
