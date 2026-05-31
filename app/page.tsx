@@ -226,8 +226,8 @@ function useMotionText() {
         const tween = gsap.fromTo(el,
           { filter: "blur(10px)", opacity: 0 },
           {
-            filter: "blur(0px)", opacity: 1,
-            duration: 0.55,
+            filter: "blur(1px)", opacity: 1,
+            duration: 0.35,
             ease: "power2.out",
             scrollTrigger: { trigger: el, start: "top 85%", end: "top 5%", scrub: 1.5 },
           }
@@ -266,6 +266,40 @@ function useMotionText() {
         anims.push(tween);
       }
     });
+
+    // Float-up animation for spec section bio and buttons
+    const specSection = document.querySelector(".specialize-section");
+    if (specSection) {
+      const specBio = specSection.querySelector(".bio");
+      const specButtons = specSection.querySelectorAll(".btn-group, .btn-group li");
+      
+      if (specBio) {
+        const bioTween = gsap.fromTo(specBio,
+          { y: 40, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: { trigger: specBio, start: "top 90%", end: "top 60%", scrub: 1 },
+          }
+        );
+        anims.push(bioTween);
+      }
+
+      specButtons.forEach((btn, i) => {
+        const btnTween = gsap.fromTo(btn,
+          { y: 50, opacity: 0 },
+          {
+            y: 0, opacity: 1,
+            duration: 0.7,
+            delay: i * 0.1,
+            ease: "power2.out",
+            scrollTrigger: { trigger: btn, start: "top 95%", end: "top 70%", scrub: 1 },
+          }
+        );
+        anims.push(btnTween);
+      });
+    }
 
     return () => {
       anims.forEach((a) => a.scrollTrigger?.kill());
@@ -645,7 +679,7 @@ function Loader({ onComplete }: { onComplete: () => void }) {
 /* ─── SPEC SECTION ─── */
 function SpecSection() {
   return (
-    <section className="section spec-section" id="spec">
+    <section className="section spec-section specialize-section" id="spec">
       <div className="container">
         <ul className="tags" data-motion-text>
           <li>REACT</li>
@@ -655,14 +689,14 @@ function SpecSection() {
           <li>CLOUD</li>
         </ul>
         <h2 data-motion-text>
-          <b>I specialize</b><b> in</b><span className="icon-android"></span><span className="icon-apple"></span> full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
+          <b>I specialize</b><b> in</b><img src="/android.png" alt="Android" className="icon-android" style={{ width: '1.5em', height: '1.5em', display: 'inline-block', verticalAlign: 'middle' }} /><span className="icon-apple"></span> full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
         </h2>
         <p className="bio" data-motion-text>
           I&apos;m currently open to full-time Senior / Lead Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
-        <ul className="btn-group">
-          <li><ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" revealOnScroll /></li>
-          <li><ScrambleBtn text="DOWNLOAD CV" cursorText="Download CV" secondary revealOnScroll /></li>
+        <ul className="btn-group" data-motion-text>
+          <li><ScrambleBtn className="specialize-btn-1" text="WRITE TO TELEGRAM" cursorText="Send me message" revealOnScroll /></li>
+          <li><ScrambleBtn className="specialize-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary revealOnScroll /></li>
         </ul>
       </div>
     </section>
