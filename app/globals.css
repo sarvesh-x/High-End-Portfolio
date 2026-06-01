@@ -495,9 +495,9 @@ html:hover .cursor-dot {
   text-transform: uppercase;
   color: var(--bone);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 16px 20px;
+  padding: 10px 12px;
   pointer-events: auto;
-  transition: border-color 0.2s ease, opacity 1s ease;
+  min-width: 140px;
 }
 
 .hero-btn:hover {
@@ -1158,6 +1158,7 @@ html:hover .cursor-dot {
 .caseInfo {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 .caseInfo .tags {
   align-self: center;

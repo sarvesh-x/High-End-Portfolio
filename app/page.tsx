@@ -843,13 +843,7 @@ function CasesSection() {
               </ul>
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
-              <a href={c.href} className="btn" data-cursor-text="View case">
-                <Corner className="topleft" />
-                <Corner className="topright" />
-                <Corner className="bottomleft" />
-                <Corner className="bottomright" />
-                <span>VIEW CASE</span>
-              </a>
+              <ScrambleBtn href={c.href} text="VIEW CASE" revealOnScroll />
             </div>
           </div>
         ))}
@@ -905,8 +899,8 @@ function LastBlocks() {
             <ul className="list" data-motion-text>
               {EXPERIENCE.map((e, i) => (
                 <li key={i}>
-                  <span className="date">{e.date}</span>
-                  <h4>{e.role}</h4>
+                   <span className="date">{e.date.toUpperCase()}</span>
+                   <h4>{e.role.toUpperCase()}</h4>
                   <p>{e.desc}</p>
                 </li>
               ))}
@@ -919,7 +913,7 @@ function LastBlocks() {
             <ul className="list" data-motion-text>
               {SKILLS.map((s, i) => (
                 <li key={i}>
-                  <h4>{s.title}</h4>
+                  <h4>{s.title.toUpperCase()}</h4>
                   <p>{s.desc}</p>
                 </li>
               ))}
@@ -935,7 +929,7 @@ function LastBlocks() {
                   <svg className="logo" viewBox={p.iconViewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d={p.icon} fill="white" />
                   </svg>
-                  <h4>{p.name}{p.soon && <i className="soon">  soon</i>}</h4>
+                  <h4>{p.name.toUpperCase()}{p.soon && <i className="soon">  soon</i>}</h4>
                   <p>{p.desc}</p>
                   {p.href && <ScrambleBtn text="View project" href={p.href} revealOnScroll />}
                 </li>
