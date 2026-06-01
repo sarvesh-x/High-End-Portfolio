@@ -1,0 +1,51 @@
+[
+  {
+    "tags": ["UI", "Design System", "React"],
+    "title": "Fintech Design System",
+    "image": "/fintech-case.png",
+    "desc": "A scalable fintech design system for mobile and web products, built to improve consistency, speed up delivery, and support complex financial flows.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "CrocoWallet",
+    "image": "/crocowallet-case.png",
+    "desc": "A Telegram-based crypto banking mini app with card issuance, wallet management, rewards, and referral flows.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "Crypto Portfolio",
+    "image": "/crypto-portfolio-case.png",
+    "desc": "A crypto portfolio and wallet app for tracking assets, monitoring market movement, and managing balances in one interface.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "Telegram wallet",
+    "image": "/telegram-wallet-case.png",
+    "desc": "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "Telegram wallet",
+    "image": "/telegram-wallet-case.png",
+    "desc": "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "Cunex crypto widget",
+    "image": "/cunex-crypto-widget-case.png",
+    "desc": "A crypto exchange widget, dashboard, and landing experience designed to support onboarding, KYC, and transaction monitoring.",
+    "href": "#"
+  },
+  {
+    "tags": ["App design"],
+    "title": "Crypto Icons Library",
+    "image": "/crypto-icons-library-case.png",
+    "desc": "A reusable crypto icon library for product teams, available in SVG, sprite, webfont, and 3D formats.",
+    "href": "#"
+  }
+]

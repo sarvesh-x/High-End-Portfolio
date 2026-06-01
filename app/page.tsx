@@ -953,7 +953,7 @@ export default function Page() {
     const el = heroRef.current;
     if (!el) return;
     const btns = [...el.querySelectorAll<HTMLElement>(".hero-btn")];
-    el.style.setProperty("--hero-scale", "0.85");
+    el.style.setProperty("--hero-scale", "1");
     el.style.setProperty("--hero-opacity", "1");
     el.style.removeProperty("--hero-blur");
 
@@ -964,7 +964,7 @@ export default function Page() {
       const e = 1 - Math.pow(1 - n, 3);
 
       if (e !== prevE) {
-        el.style.setProperty("--hero-scale", String(0.85 - e * 0.25));
+        el.style.setProperty("--hero-scale", String(1 - e * 0.25));
         el.style.setProperty("--hero-opacity", String(1 - e));
         el.style.setProperty("--hero-blur", e > 0 ? `blur(${e * 15}px)` : "");
         prevE = e;
