@@ -279,9 +279,9 @@ function useMotionText() {
           { y: 40, opacity: 0, filter: "blur(10px)" },
           {
             y: 0, opacity: 1, filter: "blur(0px)",
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: { trigger: specBio, start: "top 95%", end: "top 70%", scrub: 1 },
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: { trigger: specBio, start: "top 95%", end: "top 55%", scrub: 1 },
           }
         );
         anims.push(bioTween);
@@ -293,12 +293,12 @@ function useMotionText() {
           {
             y: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.9,
-            stagger: 0.2,
+            stagger: 0.15,
             ease: "power3.out",
             scrollTrigger: {
               trigger: btnGroup,
-              start: "top 90%",
-              end: "top 60%",
+              start: "top 80%",
+              end: "top 45%",
               scrub: 1,
             },
           }
