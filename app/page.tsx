@@ -220,7 +220,7 @@ function useMotionText() {
 
     els.forEach((el) => {
       const isContainer = el.matches(".container.vse");
-      const isWordSplit = el.matches("h2, h3, h4, .bio, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
+      const isWordSplit = el.matches("h1, h2, h3, h4, .bio, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
 
         if (isContainer) {
         const tween = gsap.fromTo(el,
@@ -276,12 +276,12 @@ function useMotionText() {
       
       if (specBio) {
         const bioTween = gsap.fromTo(specBio,
-          { y: 40, opacity: 0 },
+          { y: 40, opacity: 0, filter: "blur(10px)" },
           {
-            y: 0, opacity: 1,
+            y: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.8,
             ease: "power2.out",
-            scrollTrigger: { trigger: specBio, start: "top 90%", end: "top 60%", scrub: 1 },
+            scrollTrigger: { trigger: specBio, start: "top 95%", end: "top 70%", scrub: 1 },
           }
         );
         anims.push(bioTween);
@@ -291,9 +291,9 @@ function useMotionText() {
 
       specButtons.forEach((btn, i) => {
         const btnTween = gsap.fromTo(btn,
-          { y: 50, opacity: 0 },
+          { y: 50, opacity: 0, filter: "blur(12px)" },
           {
-            y: 0, opacity: 1,
+            y: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.7,
             delay: i * 0.1,
             ease: "power2.out",
@@ -609,12 +609,9 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href }: {
 function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) {
   return (
     <div className="hero-content" ref={heroRef}>
-      <svg className="hero-logo" width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <rect x="6" y="8" width="6" height="32" rx="2" fill="currentColor" opacity="0.9" />
-        <rect x="16" y="4" width="6" height="36" rx="2" fill="currentColor" opacity="0.7" />
-        <rect x="26" y="12" width="6" height="28" rx="2" fill="currentColor" opacity="0.5" />
-        <rect x="36" y="18" width="6" height="22" rx="2" fill="currentColor" opacity="0.3" />
-      </svg>
+      <span className="mark-bars" aria-hidden>
+        <i /><i /><i />
+      </span>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p className="p">I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
       <ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" />
@@ -694,10 +691,10 @@ function SpecSection() {
         <h1 data-motion-text>
           <b>I specialize</b> in<span className="icon-android"></span>full stack development, <span className="icon-component"></span> building <b>scalable</b> systems, and <span className="icon-web"></span> crafting <b>seamless</b> interfaces
         </h1>
-        <p className="p" data-motion-text>
+        <p className="p bio">
           I&apos;m currently open to full-time Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
-        <ul className="btn-group" data-motion-text>
+        <ul className="btn-group">
           <li><ScrambleBtn className="specialize-btn-1" text="WRITE TO TELEGRAM" cursorText="Send me message" revealOnScroll /></li>
           <li><ScrambleBtn className="specialize-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary revealOnScroll /></li>
         </ul>
