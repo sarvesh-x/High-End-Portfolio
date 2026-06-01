@@ -21,31 +21,24 @@
     "href": "#"
   },
   {
-    "tags": ["App design"],
+    "tags": ["Concept"],
     "title": "Telegram wallet",
     "image": "/telegram-wallet-case.png",
     "desc": "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
     "href": "#"
   },
   {
-    "tags": ["App design"],
-    "title": "Telegram wallet",
-    "image": "/telegram-wallet-case.png",
-    "desc": "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
-    "href": "#"
-  },
-  {
-    "tags": ["App design"],
+    "tags": ["App design", "Dashboard", "Landing"],
     "title": "Cunex crypto widget",
     "image": "/cunex-crypto-widget-case.png",
     "desc": "A crypto exchange widget, dashboard, and landing experience designed to support onboarding, KYC, and transaction monitoring.",
     "href": "#"
   },
   {
-    "tags": ["App design"],
-    "title": "Crypto Icons Library",
-    "image": "/crypto-icons-library-case.png",
-    "desc": "A reusable crypto icon library for product teams, available in SVG, sprite, webfont, and 3D formats.",
+    "tags": ["Ecommerce", "Design System","Cloud"],
+    "title": "Skateboard Shop Ecommerce Starter Kit",
+    "image": "/Ecommerce-Lite.png",
+    "desc": "An ecommerce starter kit for a skateboard shop, including a design system, backend integration, and marketing materials.",
     "href": "#"
   }
 ]

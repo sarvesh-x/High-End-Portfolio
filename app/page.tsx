@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
+import casesData from "./data/cases.json";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -725,46 +726,6 @@ function SpecSection() {
   );
 }
 
-/* ─── CASES DATA ─── */
-const CASES = [
-  {
-    tags: ["UI", "Design System", "React"],
-    title: "Fintech Design System",
-    desc: "A scalable fintech design system for mobile and web products, built to improve consistency, speed up delivery, and support complex financial flows.",
-    href: "#",
-  },
-  {
-    tags: ["App design"],
-    title: "CrocoWallet",
-    desc: "A Telegram-based crypto banking mini app with card issuance, wallet management, rewards, and referral flows.",
-    href: "#",
-  },
-  {
-    tags: ["App design"],
-    title: "Crypto Portfolio",
-    desc: "A crypto portfolio and wallet app for tracking assets, monitoring market movement, and managing balances in one interface.",
-    href: "#",
-  },
-  {
-    tags: ["Concept"],
-    title: "Telegram wallet",
-    desc: "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
-    href: "#",
-  },
-  {
-    tags: ["App design", "Dashboard", "Landing"],
-    title: "Cunex crypto widget",
-    desc: "A crypto exchange widget, dashboard, and landing experience designed to support onboarding, KYC, and transaction monitoring.",
-    href: "#",
-  },
-  {
-    tags: ["Icons", "Design System"],
-    title: "Crypto Icons Library",
-    desc: "A reusable crypto icon library for product teams, available in SVG, sprite, webfont, and 3D formats.",
-    href: "#",
-  },
-];
-
 const GLITCH_GRADIENTS = [
   "linear-gradient(135deg, #0f1923, #1a2a3a, #243b55)",
   "linear-gradient(135deg, #1a1a2e, #2d2d44, #16213e)",
@@ -821,15 +782,17 @@ function CasesSection() {
         </ul>
       </div>
       <div className="caseList">
-        {CASES.map((c, i) => (
+        {casesData.map((c, i) => {
+          const bg = c.image ? `url(${c.image})` : GLITCH_GRADIENTS[i];
+          return (
           <div className="case" key={i}>
             <div className="imageMask" data-cursor-text="Preview">
-              <div className="c-glitch" style={{ backgroundImage: GLITCH_GRADIENTS[i] }}>
-                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
-                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
-                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
-                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
-                <div className="c-glitch__img" style={{ backgroundImage: GLITCH_GRADIENTS[i] }} />
+              <div className="c-glitch" style={{ backgroundImage: bg }}>
+                <div className="c-glitch__img" style={{ backgroundImage: bg }} />
+                <div className="c-glitch__img" style={{ backgroundImage: bg }} />
+                <div className="c-glitch__img" style={{ backgroundImage: bg }} />
+                <div className="c-glitch__img" style={{ backgroundImage: bg }} />
+                <div className="c-glitch__img" style={{ backgroundImage: bg }} />
               </div>
               <Corner className="topleft" />
               <Corner className="topright" />
@@ -844,9 +807,10 @@ function CasesSection() {
               <p data-motion-text>{c.desc}</p>
               <ScrambleBtn href={c.href} text="VIEW CASE" revealOnScroll />
             </div>
-          </div>
-        ))}
-      </div>
+            </div>
+          );
+        })}
+        </div>
     </section>
   );
 }
