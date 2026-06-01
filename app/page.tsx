@@ -304,6 +304,29 @@ function useMotionText() {
       });
     }
 
+    // Float-up + blur for lalalast columns and list items
+    const lalaCols = document.querySelectorAll(".lalalast .col");
+    lalaCols.forEach((col) => {
+      const heading = col.querySelector("h3.small");
+      const targets = col.querySelectorAll("ul.list li h4, ul.list li p, ul.list li .hero-btn");
+
+      const allTargets: (Element | null)[] = [];
+      if (heading) allTargets.push(heading);
+      targets.forEach((t) => allTargets.push(t));
+
+      if (allTargets.length) {
+        const tween = gsap.fromTo(allTargets,
+          { y: 30, opacity: 0, filter: "blur(8px)" },
+          {
+            y: 0, opacity: 1, filter: "blur(0px)",
+            duration: 0.6, stagger: 0.06,
+            scrollTrigger: { trigger: col, start: "top bottom", end: "top 30%", scrub: 1 },
+          }
+        );
+        anims.push(tween);
+      }
+    });
+
     return () => {
       anims.forEach((a) => a.scrollTrigger?.kill());
     };
@@ -557,12 +580,13 @@ function Corner({ className }: { className: string }) {
 }
 
 /* ─── SCRAMBLE BUTTON ─── */
-function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href }: {
+function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className }: {
   text: string;
   cursorText?: string;
   secondary?: boolean;
   revealOnScroll?: boolean;
   href?: string;
+  className?: string;
 }) {
   const { text: disp, scramble, reset } = useScramble(text);
   const [fixedW, setFixedW] = useState(0);
@@ -589,7 +613,7 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href }: {
   return (
     <a
       ref={btnRef}
-      className={"hero-btn" + (secondary ? " secondary" : "")}
+      className={"hero-btn" + (secondary ? " secondary" : "") + (className ? " " + className : "")}
       href={href ?? "#"}
       data-cursor-text={cursorText ?? text}
       data-sound-hover
@@ -891,9 +915,9 @@ function LastBlocks() {
     <section className="section lalalast" id="exp">
       <div className="container last">
         <div className="block">
-          <div className="col" data-motion-text>
+          <div className="col">
             <h3 className="small">Experience</h3>
-            <ul className="list" data-motion-text>
+            <ul className="list">
               {EXPERIENCE.map((e, i) => (
                 <li key={i}>
                    <span className="date">{e.date.toUpperCase()}</span>
@@ -905,9 +929,9 @@ function LastBlocks() {
           </div>
         </div>
         <div className="block">
-          <div className="col" data-motion-text>
+          <div className="col">
             <h3 className="small">Skills</h3>
-            <ul className="list" data-motion-text>
+            <ul className="list">
               {SKILLS.map((s, i) => (
                 <li key={i}>
                   <h4>{s.title.toUpperCase()}</h4>
@@ -918,9 +942,9 @@ function LastBlocks() {
           </div>
         </div>
         <div className="block">
-          <div className="col" data-motion-text>
+          <div className="col">
             <h3 className="small">Personal projects</h3>
-            <ul className="list" data-motion-text>
+            <ul className="list">
               {PROJECTS.map((p, i) => (
                 <li key={i}>
                   <svg className="logo" viewBox={p.iconViewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
