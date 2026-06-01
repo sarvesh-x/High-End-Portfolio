@@ -299,7 +299,7 @@ function useMotionText() {
               trigger: btnGroup,
               start: "top 90%",
               end: "top 60%",
-              toggleActions: "play reverse play reverse",
+              scrub: 1,
             },
           }
         );
