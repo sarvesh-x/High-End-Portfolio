@@ -783,7 +783,7 @@ function CasesSection() {
         <ul className="logoGroup">
           <li>
             <svg viewBox="0 0 50 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M25 0L50 28H0L25 0Z" fill="white" opacity="0.85" />
+              <path d="M25 0L50 28H0L25 0Z" fill="white" opacity="0.85" />  
               <circle cx="25" cy="18" r="4" fill="#0f0f0f" />
             </svg>
           </li>
