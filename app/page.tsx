@@ -645,17 +645,12 @@ function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) 
 
 /* ─── LOADER ─── */
 function Loader({ onComplete }: { onComplete: () => void }) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const barRef = useRef<HTMLDivElement>(null);
-  const pctRef = useRef<HTMLSpanElement>(null);
-
   useEffect(() => {
-    const root = rootRef.current;
-    const bar = barRef.current;
-    const pct = pctRef.current;
+    const root = document.getElementById("boot-loader");
+    const bar = document.getElementById("boot-loader-bar");
+    const pct = document.getElementById("boot-loader-pct");
     if (!root || !bar || !pct) return;
 
-    document.documentElement.classList.add("boot-loading");
     document.body.classList.add("loader-active");
 
     const progress = { value: 0 };
@@ -685,19 +680,7 @@ function Loader({ onComplete }: { onComplete: () => void }) {
     return () => { tl.kill(); };
   }, [onComplete]);
 
-  return (
-    <div className="loader" ref={rootRef}>
-      <div className="loader-content">
-        <svg width="49" height="35" viewBox="0 0 49 35" fill="none" aria-hidden="true">
-          <path d="M14 7V35L0 28V0L14 7ZM31.5 7V35L17.5 28V0L31.5 7ZM49 7V35L35 28V0L49 7Z" fill="white" />
-        </svg>
-        <div className="loader-line">
-          <div className="loader-bar" ref={barRef} />
-        </div>
-        <span className="loader-pct" ref={pctRef}>0%</span>
-      </div>
-    </div>
-  );
+  return null;
 }
 
 /* ─── SPEC SECTION ─── */
