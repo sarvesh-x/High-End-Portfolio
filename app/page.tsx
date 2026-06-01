@@ -220,6 +220,7 @@ function useMotionText() {
 
     els.forEach((el) => {
       const isContainer = el.matches(".container.vse");
+      const isCaseInfo = el.matches(".caseInfo");
       const isWordSplit = el.matches("h1, h2, h3, h4, .bio, .list li p, .list li span.date, .list li h4 span, .caseInfo p, #cases .container");
 
         if (isContainer) {
@@ -230,6 +231,17 @@ function useMotionText() {
             duration: 0.35,
             ease: "power2.out",
             scrollTrigger: { trigger: el, start: "top 85%", end: "top 5%", scrub: 1.5 },
+          }
+        );
+        anims.push(tween);
+      } else if (isCaseInfo) {
+        const tween = gsap.fromTo(el,
+          { y: 100, opacity: 0, filter: "blur(10px)" },
+          {
+            y: 0, opacity: 1, filter: "blur(0px)",
+            duration: 0.55,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 85%", end: "top 25%", scrub: 1 },
           }
         );
         anims.push(tween);
