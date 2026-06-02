@@ -258,8 +258,21 @@ function useMotionText() {
         const targets = el.querySelectorAll(".motion-word, [class^='icon-'], [class*=' icon-'], svg");
         if (!targets.length) return;
 
+        const animTargets: Element[] = [];
+        targets.forEach(t => {
+          if (t.matches("[class^='icon-'], [class*=' icon-'], svg")) {
+            const wrap = document.createElement("span");
+            wrap.style.display = "inline-block";
+            t.parentNode!.insertBefore(wrap, t);
+            wrap.appendChild(t);
+            animTargets.push(wrap);
+          } else {
+            animTargets.push(t);
+          }
+        });
+
         const stagger = el.matches("#cases .container") ? 0.04 : 0.08;
-        const tween = gsap.fromTo(targets,
+        const tween = gsap.fromTo(animTargets,
           { filter: "blur(10px)", opacity: 0 },
           {
             filter: "blur(0px)", opacity: 1,
@@ -328,7 +341,7 @@ function useMotionText() {
     const lalaCols = document.querySelectorAll(".lalalast .col");
     lalaCols.forEach((col) => {
       const heading = col.querySelector("h3.small");
-      const targets = col.querySelectorAll("ul.list li h4, ul.list li p, ul.list li .hero-btn");
+      const targets = col.querySelectorAll("ul.list li h4, ul.list li p, ul.list li .hero-btn, ul.list li span.date, ul.list li svg.logo");
 
       const allTargets: (Element | null)[] = [];
       if (heading) allTargets.push(heading);
@@ -345,6 +358,21 @@ function useMotionText() {
         );
         anims.push(tween);
       }
+    });
+
+    // Blur reveal for case study images
+    const caseImages = document.querySelectorAll("#cases .imageMask");
+    caseImages.forEach((img) => {
+      const tween = gsap.fromTo(img,
+        { y: 60, opacity: 0, filter: "blur(15px)" },
+        {
+          y: 0, opacity: 1, filter: "blur(0px)",
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: { trigger: img, start: "top 85%", end: "top 35%", scrub: 1 },
+        }
+      );
+      anims.push(tween);
     });
 
     return () => {
