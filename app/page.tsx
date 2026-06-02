@@ -122,6 +122,21 @@ function useHoverSounds() {
 let _cursorEl: HTMLDivElement | null = null;
 let _cursorTimer: ReturnType<typeof setInterval> | null = null;
 let _cursorTarget: HTMLElement | null = null;
+let _boxEl: HTMLDivElement | null = null;
+let _dotEl: HTMLDivElement | null = null;
+let _raf = 0;
+let _mouseX = -9999;
+let _mouseY = -9999;
+let _boxCx = -9999;
+let _boxCy = -9999;
+let _boxW = 20;
+let _boxH = 20;
+let _targetCx = -9999;
+let _targetCy = -9999;
+let _targetW = 20;
+let _targetH = 20;
+let _isHovering = false;
+let _hasMoved = false;
 
 function cursorShow(text: string) {
   if (!_cursorEl) return;
@@ -144,50 +159,150 @@ function cursorHide() {
   _cursorEl.classList.remove("is-visible");
 }
 
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
+function cursorLoop() {
+  if (!_boxEl || !_dotEl) { _raf = requestAnimationFrame(cursorLoop); return; }
+  if (!_hasMoved) { _raf = requestAnimationFrame(cursorLoop); return; }
+
+  _boxCx = lerp(_boxCx, _targetCx, 0.12);
+  _boxCy = lerp(_boxCy, _targetCy, 0.12);
+  _boxW = lerp(_boxW, _targetW, 0.12);
+  _boxH = lerp(_boxH, _targetH, 0.12);
+
+  _boxEl.style.left = (_boxCx - _boxW / 2) + "px";
+  _boxEl.style.top = (_boxCy - _boxH / 2) + "px";
+  _boxEl.style.width = _boxW + "px";
+  _boxEl.style.height = _boxH + "px";
+
+  _raf = requestAnimationFrame(cursorLoop);
+}
+
 function useCursor() {
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     if (!fine) return;
 
+    const cursorStyle = document.createElement("style");
+    cursorStyle.textContent = "*,*:hover{cursor:none!important}";
+    document.head.appendChild(cursorStyle);
+
+    const dot = document.createElement("div");
+    dot.className = "cursor-dot";
+    dot.style.left = "-9999px";
+    dot.style.top = "-9999px";
+
+    const box = document.createElement("div");
+    box.className = "cursor-box";
+    box.style.left = "-9999px";
+    box.style.top = "-9999px";
+    ["tl", "tr", "bl", "br"].forEach((pos) => {
+      const c = document.createElement("i");
+      c.className = "cursor-corner cursor-corner--" + pos;
+      box.appendChild(c);
+    });
+
     const el = document.createElement("div");
     el.className = "coursor";
-    document.body.appendChild(el);
+
+    document.body.append(box, dot, el);
+    _dotEl = dot;
+    _boxEl = box;
     _cursorEl = el;
 
+    _raf = requestAnimationFrame(cursorLoop);
+
+    const PAD = 6;
+
     const onMove = (e: PointerEvent) => {
+      if (!_hasMoved) {
+        _boxCx = e.clientX;
+        _boxCy = e.clientY;
+        _targetCx = e.clientX;
+        _targetCy = e.clientY;
+        _hasMoved = true;
+      }
+      _mouseX = e.clientX;
+      _mouseY = e.clientY;
+      dot.style.left = e.clientX + "px";
+      dot.style.top = e.clientY + "px";
       el.style.transform = `translate3d(${e.clientX + 18}px, ${e.clientY + 18}px, 0)`;
+      if (!_isHovering) {
+        _targetCx = e.clientX;
+        _targetCy = e.clientY;
+      }
     };
     window.addEventListener("pointermove", onMove);
 
-    document.addEventListener("mouseover", (e) => {
-      const t = (e.target as HTMLElement).closest("[data-cursor-text]") as HTMLElement | null;
+    const onHover = (e: MouseEvent) => {
+      const t = (e.target as HTMLElement).closest("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
       if (t && t !== _cursorTarget) {
         _cursorTarget = t;
+        _isHovering = true;
+        box.classList.add("is-hover");
+        const rect = t.getBoundingClientRect();
+        _targetCx = rect.left + rect.width / 2;
+        _targetCy = rect.top + rect.height / 2;
+        _targetW = rect.width + PAD * 2;
+        _targetH = rect.height + PAD * 2;
         cursorShow(t.getAttribute("data-cursor-text") || "");
       }
-    }, true);
+    };
 
-    document.addEventListener("mouseout", (e) => {
-      const t = (e.target as HTMLElement).closest("[data-cursor-text]") as HTMLElement | null;
+    const onLeave = (e: MouseEvent) => {
+      const t = (e.target as HTMLElement).closest("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
       if (t && t === _cursorTarget) {
         const rel = (e as MouseEvent).relatedTarget as HTMLElement | null;
-        const next = rel?.closest?.("[data-cursor-text]") as HTMLElement | null;
+        const next = rel?.closest?.("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
         if (!next || next === t) {
           _cursorTarget = null;
+          _isHovering = false;
+          box.classList.remove("is-hover");
+          _targetW = 20;
+          _targetH = 20;
+          _targetCx = _mouseX;
+          _targetCy = _mouseY;
           cursorHide();
         } else {
           _cursorTarget = next;
+          const rect = next.getBoundingClientRect();
+          _targetCx = rect.left + rect.width / 2;
+          _targetCy = rect.top + rect.height / 2;
+          _targetW = rect.width + PAD * 2;
+          _targetH = rect.height + PAD * 2;
           cursorShow(next.getAttribute("data-cursor-text") || "");
         }
       }
-    }, true);
+    };
+
+    const onPress = () => box.classList.add("is-pressed");
+    const onRelease = () => box.classList.remove("is-pressed");
+
+    document.addEventListener("mouseover", onHover, true);
+    document.addEventListener("mouseout", onLeave, true);
+    window.addEventListener("mousedown", onPress);
+    window.addEventListener("mouseup", onRelease);
 
     return () => {
+      cancelAnimationFrame(_raf);
+      cursorStyle.remove();
+      _dotEl = null;
+      _boxEl = null;
       _cursorEl = null;
       _cursorTarget = null;
+      _isHovering = false;
+      _hasMoved = false;
       if (_cursorTimer) clearInterval(_cursorTimer);
       _cursorTimer = null;
       window.removeEventListener("pointermove", onMove);
+      document.removeEventListener("mouseover", onHover, true);
+      document.removeEventListener("mouseout", onLeave, true);
+      window.removeEventListener("mousedown", onPress);
+      window.removeEventListener("mouseup", onRelease);
+      box.remove();
+      dot.remove();
       el.remove();
     };
   }, []);
