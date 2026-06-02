@@ -411,10 +411,22 @@ function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLA
 
   const cursorText = label === "cv" ? "Download CV" : label === "github" ? "View GitHub" : label === "patreon" ? "Support on Patreon" : label === "linkedin" ? "View LinkedIn" : label === "email" ? "Send email" : label;
 
+  const linkMap: Record<string, { href: string; target?: string; rel?: string; download?: boolean }> = {
+    cv: { href: "/Resume-2025.pdf", download: true },
+    linkedin: { href: "https://www.linkedin.com/in/sarvesh-kumar-developer", target: "_blank", rel: "noopener noreferrer" },
+    github: { href: "https://github.com/sarvesh-x/", target: "_blank", rel: "noopener noreferrer" },
+    patreon: { href: "https://www.patreon.com/profile/creators?u=6304245", target: "_blank", rel: "noopener noreferrer" },
+    email: { href: "mailto:sarveshkumar10101@gmail.com" },
+  };
+  const link = linkMap[label] ?? { href: "#" };
+
   return (
     <a
       ref={ref}
-      href="#"
+      href={link.href}
+      target={link.target}
+      rel={link.rel}
+      download={link.download || undefined}
       className={isDim ? "nav-item-dim" : ""}
       data-cursor-text={cursorText}
       data-sound-hover
@@ -687,7 +699,7 @@ function Corner({ className }: { className: string }) {
 }
 
 /* ─── SCRAMBLE BUTTON ─── */
-function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className, onClick }: {
+function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className, onClick, download, target }: {
   text: string;
   cursorText?: string;
   secondary?: boolean;
@@ -695,6 +707,8 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
   href?: string;
   className?: string;
   onClick?: () => void;
+  download?: boolean;
+  target?: string;
 }) {
   const { text: disp, scramble, reset } = useScramble(text);
   const [fixedW, setFixedW] = useState(0);
@@ -723,6 +737,9 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
       ref={btnRef}
       className={"hero-btn" + (secondary ? " secondary" : "") + (className ? " " + className : "")}
       href={href ?? "#"}
+      download={download || undefined}
+      target={target}
+      rel={target ? "noopener noreferrer" : undefined}
       data-cursor-text={cursorText ?? text}
       data-sound-hover
       style={sStyle}
@@ -811,8 +828,8 @@ function SpecSection() {
           I&apos;m currently open to full-time Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
         <ul className="btn-group">
-          <li><ScrambleBtn className="hero-btn-1" text="WRITE TO WhatsApp" cursorText="Send me message" /></li>
-          <li><ScrambleBtn className="hero-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary /></li>
+          <li><ScrambleBtn className="hero-btn-1" text="WhatsApp Me" cursorText="Send me message" href="https://wa.me/919660268159" target="_blank" /></li>
+          <li><ScrambleBtn className="hero-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary href="/Resume-2025.pdf" download /></li>
         </ul>
       </div>
     </section>

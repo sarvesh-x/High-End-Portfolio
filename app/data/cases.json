@@ -4,41 +4,41 @@
     "title": "Ethereum-Based dApp (MetaMask + Moralis)",
     "image": "/Eth-dApp.jpeg",
     "desc": "A decentralized application (dApp) built on the Ethereum blockchain, utilizing MetaMask for user authentication and Moralis for backend services, providing a seamless user experience for interacting with blockchain technology.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/ethbaseddapp"
   },
   {
     "tags": ["Android", "Web App", "Mobile App"],
     "title": "RHCMS: Rural Housing Construction Management System",
     "image": "/RHCMS.jpeg",
     "desc": "A rural housing construction management system designed to streamline project management, improve communication, and enhance transparency for rural housing projects.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/SG293_DIGI.PHOENIX"
   },
   {
     "tags": ["AI", "Machine Learning", "Neural Networks"],
     "title": "Smart Traffic Management System",
     "image": "/Smart-Traffic-Management.jpeg",
     "desc": "A smart traffic management system designed to optimize traffic flow and reduce congestion in urban areas.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/Smart-Traffic-Management-using-Fuzzy-Controller-and-Neural-Network"
   },
   {
     "tags": ["AI", "Healthcare", "Voice Assistant"],
     "title": "MeVo: Medical Voice Assistant",
     "image": "/MeVo.jpeg",
     "desc": "A concept for a medical voice assistant designed to improve patient-provider communication and streamline clinical workflows.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/MeVo_project"
   },
   {
     "tags": ["App design", "Portfolio", "Landing"],
     "title": "High End Portfolio",
     "image": "/High-End-Portfolio.png",
     "desc": "A High End Portfolio website design for Developer, featuring a sleek and modern design, interactive elements, and a focus on showcasing Projects & Experience.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/High-End-Portfolio"
   },
   {
     "tags": ["Ecommerce", "Design System","Cloud"],
     "title": "Skateboard Shop Ecommerce Starter Kit",
     "image": "/Ecommerce-Lite.jpeg",
     "desc": "An ecommerce starter kit for a skateboard shop, including a design system, backend integration, and marketing materials.",
-    "href": "#"
+    "href": "https://github.com/sarvesh-x/ecommerce"
   }
 ]
