@@ -210,7 +210,7 @@ function cursorLoop() {
     updateCursorTargetBox(_cursorTarget);
   }
 
-  const ease = _isHovering ? 0.18 : 0.14;
+  const ease = _isHovering ? 0.095 : 0.13;
   _boxCx = lerp(_boxCx, _targetCx, ease);
   _boxCy = lerp(_boxCy, _targetCy, ease);
   _boxW = lerp(_boxW, _targetW, ease);
