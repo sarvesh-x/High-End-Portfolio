@@ -46,9 +46,21 @@ function useScramble(label: string) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  function clearTimers() {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }
+
+  useEffect(() => clearTimers, []);
+
   function scramble() {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    clearTimers();
     let i = 0;
     timerRef.current = setInterval(() => {
       setText(
@@ -75,10 +87,7 @@ function useScramble(label: string) {
   }
 
   function reset() {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+    clearTimers();
     setText(label);
   }
 
@@ -129,14 +138,44 @@ let _mouseX = -9999;
 let _mouseY = -9999;
 let _boxCx = -9999;
 let _boxCy = -9999;
-let _boxW = 20;
-let _boxH = 20;
+let _boxW = 28;
+let _boxH = 28;
 let _targetCx = -9999;
 let _targetCy = -9999;
-let _targetW = 20;
-let _targetH = 20;
+let _targetW = 28;
+let _targetH = 28;
 let _isHovering = false;
 let _hasMoved = false;
+
+const CURSOR_TARGET_SELECTOR = "[data-cursor-text], a, button, .hero-btn";
+
+function getCursorTarget(target: EventTarget | null) {
+  return (target as HTMLElement | null)?.closest?.(CURSOR_TARGET_SELECTOR) as HTMLElement | null;
+}
+
+function getCursorWrap(target: HTMLElement) {
+  const headerLabel = target.matches(".header-nav a") ? target.querySelector("span") : null;
+  const soundIcon = target.matches(".wave-mark") ? target.querySelector("svg") : null;
+  const rect = (headerLabel ?? soundIcon ?? target).getBoundingClientRect();
+  const padX = headerLabel ? 10 : soundIcon ? 1 : 8;
+  const padY = headerLabel ? 7 : soundIcon ? 1 : 6;
+  const minSize = soundIcon ? 50 : headerLabel ? 30 : 34;
+
+  return {
+    cx: rect.left + rect.width / 2,
+    cy: rect.top + rect.height / 2,
+    width: Math.max(minSize, rect.width + padX * 2),
+    height: Math.max(minSize, rect.height + padY * 2),
+  };
+}
+
+function updateCursorTargetBox(target: HTMLElement) {
+  const wrap = getCursorWrap(target);
+  _targetCx = wrap.cx;
+  _targetCy = wrap.cy;
+  _targetW = wrap.width;
+  _targetH = wrap.height;
+}
 
 function cursorShow(text: string) {
   if (!_cursorEl) return;
@@ -167,10 +206,15 @@ function cursorLoop() {
   if (!_boxEl || !_dotEl) { _raf = requestAnimationFrame(cursorLoop); return; }
   if (!_hasMoved) { _raf = requestAnimationFrame(cursorLoop); return; }
 
-  _boxCx = lerp(_boxCx, _targetCx, 0.12);
-  _boxCy = lerp(_boxCy, _targetCy, 0.12);
-  _boxW = lerp(_boxW, _targetW, 0.12);
-  _boxH = lerp(_boxH, _targetH, 0.12);
+  if (_isHovering && _cursorTarget?.isConnected) {
+    updateCursorTargetBox(_cursorTarget);
+  }
+
+  const ease = _isHovering ? 0.18 : 0.14;
+  _boxCx = lerp(_boxCx, _targetCx, ease);
+  _boxCy = lerp(_boxCy, _targetCy, ease);
+  _boxW = lerp(_boxW, _targetW, ease);
+  _boxH = lerp(_boxH, _targetH, ease);
 
   _boxEl.style.left = (_boxCx - _boxW / 2) + "px";
   _boxEl.style.top = (_boxCy - _boxH / 2) + "px";
@@ -214,8 +258,6 @@ function useCursor() {
 
     _raf = requestAnimationFrame(cursorLoop);
 
-    const PAD = 6;
-
     const onMove = (e: PointerEvent) => {
       if (!_hasMoved) {
         _boxCx = e.clientX;
@@ -237,41 +279,33 @@ function useCursor() {
     window.addEventListener("pointermove", onMove);
 
     const onHover = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
+      const t = getCursorTarget(e.target);
       if (t && t !== _cursorTarget) {
         _cursorTarget = t;
         _isHovering = true;
         box.classList.add("is-hover");
-        const rect = t.getBoundingClientRect();
-        _targetCx = rect.left + rect.width / 2;
-        _targetCy = rect.top + rect.height / 2;
-        _targetW = rect.width + PAD * 2;
-        _targetH = rect.height + PAD * 2;
+        updateCursorTargetBox(t);
         cursorShow(t.getAttribute("data-cursor-text") || "");
       }
     };
 
     const onLeave = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
+      const t = getCursorTarget(e.target);
       if (t && t === _cursorTarget) {
         const rel = (e as MouseEvent).relatedTarget as HTMLElement | null;
-        const next = rel?.closest?.("[data-cursor-text], a, button, .hero-btn") as HTMLElement | null;
+        const next = getCursorTarget(rel);
         if (!next || next === t) {
           _cursorTarget = null;
           _isHovering = false;
           box.classList.remove("is-hover");
-          _targetW = 20;
-          _targetH = 20;
+          _targetW = 28;
+          _targetH = 28;
           _targetCx = _mouseX;
           _targetCy = _mouseY;
           cursorHide();
         } else {
           _cursorTarget = next;
-          const rect = next.getBoundingClientRect();
-          _targetCx = rect.left + rect.width / 2;
-          _targetCy = rect.top + rect.height / 2;
-          _targetW = rect.width + PAD * 2;
-          _targetH = rect.height + PAD * 2;
+          updateCursorTargetBox(next);
           cursorShow(next.getAttribute("data-cursor-text") || "");
         }
       }
@@ -339,6 +373,7 @@ function useMotionText() {
     const els = document.querySelectorAll("[data-motion-text]");
     if (!els.length) return;
     const anims: gsap.core.Tween[] = [];
+    const mutatedEls: Array<{ el: Element; html: string }> = [];
 
     els.forEach((el) => {
       const isContainer = el.matches(".container.vse");
@@ -369,6 +404,7 @@ function useMotionText() {
         anims.push(tween);
       } else if (isWordSplit) {
         const cloned = deepSplit(el);
+        mutatedEls.push({ el, html: el.innerHTML });
         el.innerHTML = "";
         el.appendChild(cloned);
 
@@ -543,21 +579,28 @@ function useMotionText() {
       anims.push(tween);
     });
 
+    const refreshRaf = requestAnimationFrame(() => ScrollTrigger.refresh());
+
     return () => {
-      anims.forEach((a) => a.scrollTrigger?.kill());
+      cancelAnimationFrame(refreshRaf);
+      anims.forEach((a) => {
+        a.scrollTrigger?.kill();
+        a.kill();
+      });
+      mutatedEls.forEach(({ el, html }) => {
+        el.innerHTML = html;
+      });
     };
   }, []);
 }
 
-function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLAnchorElement, label: string) => void; isDim: boolean }) {
+function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (label: string) => void; isDim: boolean }) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const spanRef = useRef<HTMLSpanElement>(null);
   const [fixedW, setFixedW] = useState(0);
   const { text, scramble, reset } = useScramble(label);
 
   const measured = useCallback((el: HTMLSpanElement | null) => {
     if (el && !fixedW) {
-      spanRef.current = el;
       setFixedW(el.offsetWidth);
     }
   }, [fixedW]);
@@ -584,7 +627,7 @@ function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLA
       data-cursor-text={cursorText}
       data-sound-hover
       onMouseEnter={() => {
-        if (ref.current) onEnter(ref.current, label);
+        onEnter(label);
         scramble();
       }}
       onMouseLeave={reset}
@@ -599,25 +642,10 @@ function NavItem({ label, onEnter, isDim }: { label: string; onEnter: (el: HTMLA
 function Nav() {
   const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const [hovered, setHovered] = useState(false);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
-  const [box, setBox] = useState({ top: 0, left: 0, width: 0, height: 0 });
   const sounds = useHoverSounds();
 
-  function handleEnter(el: HTMLAnchorElement, label: string) {
-    if (!navRef.current) return;
-    const navRect = navRef.current.getBoundingClientRect();
-    const rect = el.getBoundingClientRect();
-    const hPad = 2;
-    const vPad = -5;
-    setBox({
-      top: rect.top - navRect.top - vPad,
-      left: rect.left - navRect.left - hPad,
-      width: rect.width + hPad * 2,
-      height: rect.height + vPad * 2,
-    });
-    setHovered(true);
+  function handleEnter(label: string) {
     setHoveredLabel(label);
   }
 
@@ -634,17 +662,21 @@ function Nav() {
   function toggleSound() {
     sounds.unlock();
     if (audioRef.current) {
-      audioRef.current.volume = soundOn ? 0 : 0.4;
-      setSoundOn(!soundOn);
+      if (soundOn) {
+        audioRef.current.pause();
+        setSoundOn(false);
+      } else {
+        audioRef.current.volume = 0.4;
+        void audioRef.current.play().then(() => setSoundOn(true)).catch(() => setSoundOn(false));
+      }
       return;
     }
 
     const audio = new Audio("/Score.mp3");
     audio.loop = true;
     audio.volume = 0.4;
-    audio.play();
     audioRef.current = audio;
-    setSoundOn(true);
+    void audio.play().then(() => setSoundOn(true)).catch(() => setSoundOn(false));
   }
 
   return (
@@ -654,8 +686,6 @@ function Nav() {
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       className="site-header-frame"
     >
-      <Corner className="corner-plus corner-plus-bl" />
-      <Corner className="corner-plus corner-plus-br" />
       <a href="#" className="brand-lockup" aria-label="Sarvesh home">
         <span className="mark-bars" aria-hidden>
           <i />
@@ -716,27 +746,10 @@ function Nav() {
         </svg>
       </button>
 
-      <nav className="header-nav" aria-label="Social links" ref={navRef} onMouseLeave={() => { setHovered(false); setHoveredLabel(null); }}>
+      <nav className="header-nav" aria-label="Social links" onMouseLeave={() => setHoveredLabel(null)}>
         {nav.map((item) => (
           <NavItem key={item} label={item} onEnter={handleEnter} isDim={hoveredLabel !== null && hoveredLabel !== item} />
         ))}
-        <motion.div
-          className="nav-hover-box"
-          animate={{
-            top: box.top,
-            left: box.left,
-            width: box.width,
-            height: box.height,
-            opacity: hovered ? 1 : 0,
-          }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-          initial={false}
-        >
-          <i className="nav-hover-corner nav-hover-corner--tl" />
-          <i className="nav-hover-corner nav-hover-corner--tr" />
-          <i className="nav-hover-corner nav-hover-corner--bl" />
-          <i className="nav-hover-corner nav-hover-corner--br" />
-        </motion.div>
       </nav>
     </motion.header>
   );
@@ -768,9 +781,6 @@ function Hud() {
   return (
     <>
       <div className="telemetry-panel">
-        <Corner className="corner-plus telemetry-corner-tl" />
-        <Corner className="corner-plus telemetry-corner-tr" />
-        <Corner className="corner-plus telemetry-corner-br" />
         <div>
           <div>CURSOR X: <strong>{xCoord}</strong></div>
           <div>CURSOR Y: <strong>{yCoord}</strong></div>
@@ -843,14 +853,6 @@ function ScrollIndicator() {
   );
 }
 
-function Corner({ className }: { className: string }) {
-  return (
-    <svg className={className} width="5" height="5" viewBox="0 0 5 5" fill="none">
-      <path d="M3 2H5V3H3V5H2V3H0V2H2V0H3V2Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 /* ─── SCRAMBLE BUTTON ─── */
 function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className, onClick, download, target }: {
   text: string;
@@ -868,6 +870,7 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
   const [revealed, setRevealed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const btnRef = useRef<HTMLAnchorElement>(null);
+  const expandTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const measured = useCallback((el: HTMLSpanElement | null) => {
     if (el && !fixedW) setFixedW(el.offsetWidth + 4);
@@ -881,6 +884,10 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
     observer.observe(btnRef.current);
     return () => observer.disconnect();
   }, [revealOnScroll]);
+
+  useEffect(() => () => {
+    if (expandTimerRef.current) clearTimeout(expandTimerRef.current);
+  }, []);
 
   const sStyle = revealOnScroll
     ? { filter: revealed ? "blur(0px)" : "blur(10px)", opacity: revealed ? 1 : 0, transition: "filter 0.6s ease, opacity 0.6s ease" }
@@ -900,13 +907,15 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
       style={sStyle}
       onMouseEnter={scramble}
       onMouseLeave={reset}
-      onClick={() => { scramble(); onClick?.(); setExpanded(true); setTimeout(() => setExpanded(false), 300); }}
+      onClick={() => {
+        scramble();
+        onClick?.();
+        setExpanded(true);
+        if (expandTimerRef.current) clearTimeout(expandTimerRef.current);
+        expandTimerRef.current = setTimeout(() => setExpanded(false), 300);
+      }}
       onTouchStart={scramble}
     >
-      <Corner className="corner-btn corner-btn-tl" />
-      <Corner className="corner-btn corner-btn-tr" />
-      <Corner className="corner-btn corner-btn-bl" />
-      <Corner className="corner-btn corner-btn-br" />
       <span ref={measured} style={{ display: "inline-block", width: fixedW || undefined, overflow: "hidden", whiteSpace: "nowrap" }}>{disp}</span>
     </a>
   );
@@ -1060,10 +1069,6 @@ function CasesSection() {
                 <div className="c-glitch__img" style={{ backgroundImage: bg }} />
                 <div className="c-glitch__img" style={{ backgroundImage: bg }} />
               </div>
-              <Corner className="topleft" />
-              <Corner className="topright" />
-              <Corner className="bottomleft" />
-              <Corner className="bottomright" />
             </div>
             <div className="caseInfo" data-motion-text>
               <ul className="tags">
@@ -1184,7 +1189,6 @@ export default function Page() {
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
-    const btns = [...el.querySelectorAll<HTMLElement>(".hero-btn")];
     el.style.setProperty("--hero-scale", "1");
     el.style.setProperty("--hero-opacity", "1");
     el.style.removeProperty("--hero-blur");
@@ -1242,10 +1246,6 @@ export default function Page() {
       <div className="noise" />
       <Nav />
       <div className="frame-screen">
-        <Corner className="corner-plus corner-frame-tl" />
-        <Corner className="corner-plus corner-frame-tr" />
-        <Corner className="corner-plus corner-frame-bl" />
-        <Corner className="corner-plus corner-frame-br" />
         <ProgressBar />
         <Hero heroRef={heroRef} />
         <Hud />

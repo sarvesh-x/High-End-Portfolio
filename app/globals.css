@@ -77,11 +77,19 @@ h2 a { text-decoration: none; }
   position: fixed;
   pointer-events: none;
   z-index: 9998;
-  will-change: left, top, width, height;
+  animation: cursor-box-spin 4s linear infinite;
+  rotate: 0deg;
+  scale: 1;
+  transform-origin: center;
+  transition:
+    rotate 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    scale 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: left, top, width, height, rotate, scale;
 }
 
 .cursor-box.is-pressed {
-  transform: scale(0.95);
+  scale: 0.95;
+  filter: brightness(1.25);
 }
 
 .cursor-corner {
@@ -90,35 +98,78 @@ h2 a { text-decoration: none; }
   height: 8px;
   border-color: rgba(255, 255, 255, 0.4);
   border-style: solid;
-  transition: border-color 0.3s ease;
+  transition:
+    border-color 0.26s ease,
+    width 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    top 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    right 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    bottom 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cursor-box-spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
 }
 
 .cursor-box.is-hover .cursor-corner {
   border-color: rgba(255, 255, 255, 0.8);
+  width: 13px;
+  height: 13px;
+}
+
+.cursor-box.is-hover {
+  animation: none;
+  rotate: 0deg;
 }
 
 .cursor-corner--tl {
-  top: -1px;
-  left: -1px;
+  top: 2px;
+  left: 2px;
   border-width: 1px 0 0 1px;
 }
 
 .cursor-corner--tr {
-  top: -1px;
-  right: -1px;
+  top: 2px;
+  right: 2px;
   border-width: 1px 1px 0 0;
 }
 
 .cursor-corner--bl {
-  bottom: -1px;
-  left: -1px;
+  bottom: 2px;
+  left: 2px;
   border-width: 0 0 1px 1px;
 }
 
 .cursor-corner--br {
-  bottom: -1px;
-  right: -1px;
+  bottom: 2px;
+  right: 2px;
   border-width: 0 1px 1px 0;
+}
+
+.cursor-box.is-hover .cursor-corner--tl {
+  top: -1px;
+  left: -1px;
+}
+
+.cursor-box.is-hover .cursor-corner--tr {
+  top: -1px;
+  right: -1px;
+}
+
+.cursor-box.is-hover .cursor-corner--bl {
+  bottom: -1px;
+  left: -1px;
+}
+
+.cursor-box.is-hover .cursor-corner--br {
+  right: -1px;
+  bottom: -1px;
 }
 
   #bg-video-stack {
@@ -315,44 +366,6 @@ h2 a { text-decoration: none; }
   opacity: 0.6;
   flex-shrink: 0;
 }
-
-.nav-hover-box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  border: 1px solid rgba(244, 240, 232, 0.12);
-}
-
-.nav-hover-corner {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-}
-
-.nav-hover-corner::before,
-.nav-hover-corner::after {
-  content: "";
-  position: absolute;
-  background: rgba(244, 240, 232, 0.62);
-}
-
-.nav-hover-corner::before {
-  width: 5px;
-  height: 1px;
-}
-
-.nav-hover-corner::after {
-  width: 1px;
-  height: 5px;
-}
-
-.nav-hover-corner--tl { top: -3px; left: -3px; }
-.nav-hover-corner--tr { top: -3px; right: -3px; transform: rotate(90deg); }
-.nav-hover-corner--bl { bottom: -3px; left: -3px; transform: rotate(270deg); }
-.nav-hover-corner--br { bottom: -3px; right: -3px; transform: rotate(180deg); }
 
 .frame-screen {
   position: fixed;
@@ -560,29 +573,6 @@ h2 a { text-decoration: none; }
   margin-top: 24px;
 }
 
-.corner-btn {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  fill: rgba(244, 240, 232, 0.86);
-  pointer-events: none;
-  transition: all 0.2s ease;
-}
-
-.corner-btn-tl { top: -4px; left: -4px; }
-.corner-btn-tr { top: -4px; right: -4px; }
-.corner-btn-bl { bottom: -4px; left: -4px; }
-.corner-btn-br { bottom: -4px; right: -4px; }
-
-.hero-btn:hover .corner-btn-tl,
-.hero-btn[data-expanded] .corner-btn-tl { top: -8px; left: -8px; }
-.hero-btn:hover .corner-btn-tr,
-.hero-btn[data-expanded] .corner-btn-tr { top: -8px; right: -8px; }
-.hero-btn:hover .corner-btn-bl,
-.hero-btn[data-expanded] .corner-btn-bl { bottom: -8px; left: -8px; }
-.hero-btn:hover .corner-btn-br,
-.hero-btn[data-expanded] .corner-btn-br { bottom: -8px; right: -8px; }
-
 .hero-tags {
   display: flex;
   flex-direction: row;
@@ -611,27 +601,6 @@ h2 a { text-decoration: none; }
   position: absolute;
   left: 0;
 }
-
-.corner-plus {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  fill: rgba(244, 240, 232, 0.86);
-  pointer-events: none;
-  transition: all 0.2s ease;
-}
-
-.corner-plus-bl { bottom: -4px; left: -4px; }
-.corner-plus-br { bottom: -4px; right: -4px; }
-
-.corner-frame-tl { left: 0; top: 0; }
-.corner-frame-tr { right: 0; top: 0; }
-.corner-frame-bl { left: 0; bottom: 0; }
-.corner-frame-br { right: 0; bottom: 0; }
-
-.telemetry-corner-tl { left: -4px; top: -4px; }
-.telemetry-corner-tr { right: -4px; top: -4px; }
-.telemetry-corner-br { right: -4px; bottom: -4px; }
 
 .progress-wrap {
   position: fixed;
@@ -1088,14 +1057,6 @@ h2 a { text-decoration: none; }
   position: relative;
   cursor: pointer;
 }
-.imageMask .topleft { position: absolute; top: -4px; left: -4px; transition: 0.2s; }
-.imageMask .topright { position: absolute; top: -4px; right: -4px; transition: 0.2s; }
-.imageMask .bottomleft { position: absolute; bottom: -4px; left: -4px; transition: 0.2s; }
-.imageMask .bottomright { position: absolute; bottom: -4px; right: -4px; transition: 0.2s; }
-.imageMask:hover .topleft { top: -8px; left: -8px; transition: 0.2s; }
-.imageMask:hover .topright { top: -8px; right: -8px; transition: 0.2s; }
-.imageMask:hover .bottomleft { bottom: -8px; left: -8px; transition: 0.2s; }
-.imageMask:hover .bottomright { bottom: -8px; right: -8px; transition: 0.2s; }
 .c-glitch,
 .c-glitch__img {
   background-repeat: no-repeat;
@@ -1241,14 +1202,6 @@ h2 a { text-decoration: none; }
   text-transform: uppercase;
 }
 #cases .btn:hover { border-color: var(--bone); transition: 0.2s; }
-#cases .btn .topleft { position: absolute; top: -4px; left: -4px; transition: 0.2s; }
-#cases .btn .topright { position: absolute; top: -4px; right: -4px; transition: 0.2s; }
-#cases .btn .bottomleft { position: absolute; bottom: -4px; left: -4px; transition: 0.2s; }
-#cases .btn .bottomright { position: absolute; bottom: -4px; right: -4px; transition: 0.2s; }
-#cases .btn:hover .topleft { top: -8px; left: -8px; transition: 0.2s; }
-#cases .btn:hover .topright { top: -8px; right: -8px; transition: 0.2s; }
-#cases .btn:hover .bottomleft { bottom: -8px; left: -8px; transition: 0.2s; }
-#cases .btn:hover .bottomright { bottom: -8px; right: -8px; transition: 0.2s; }
 
 /* ===== LAST BLOCKS (Experience, Skills, Personal Projects) ===== */
 .section.lalalast {
@@ -1675,10 +1628,6 @@ body.loader-active {
   gap: 0;
 }
 
-.project-info .project-btn .corner-btn {
-  position: absolute;
-}
-
 .case-cat {
   font-family: var(--font-mono), "SF Mono", SFMono-Regular, ui-monospace, monospace;
   font-size: 10px;
@@ -1701,16 +1650,3 @@ body.loader-active {
     gap: 6px;
   }
 }
-
-
-
-
-
-/* ===== NAV CORNER EXPANSION ===== */
-.nav-hover-corner {
-  transition: all 0.2s ease;
-}
-.header-nav:hover .nav-hover-corner--tl { top: -6px; left: -6px; }
-.header-nav:hover .nav-hover-corner--tr { top: -6px; right: -6px; }
-.header-nav:hover .nav-hover-corner--bl { bottom: -6px; left: -6px; }
-.header-nav:hover .nav-hover-corner--br { bottom: -6px; right: -6px; }
