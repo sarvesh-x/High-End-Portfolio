@@ -915,7 +915,7 @@ function CasesSection() {
               </ul>
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
-              <ScrambleBtn href={c.href} text="View Project" revealOnScroll />
+              <ScrambleBtn href={c.href} text="View Project" revealOnScroll target="_blank" />
             </div>
             </div>
           );
@@ -1004,7 +1004,7 @@ function LastBlocks() {
                   </svg>
                   <h4>{p.name.toUpperCase()}{p.soon && <i className="soon">  soon</i>}</h4>
                   <p>{p.desc}</p>
-                  {p.href && <ScrambleBtn text="View project" href={p.href} revealOnScroll />}
+                  {p.href && <ScrambleBtn text="View project" href={p.href} revealOnScroll target="_blank" />}
                 </li>
               ))}
             </ul>
