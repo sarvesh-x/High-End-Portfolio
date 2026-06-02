@@ -241,7 +241,7 @@ function useMotionText() {
         anims.push(tween);
       } else if (isCaseInfo) {
         const tween = gsap.fromTo(el,
-          { y: 100, opacity: 0, filter: "blur(10px)" },
+          { y: 100, opacity: 0, filter: "blur(8px)" },
           {
             y: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.55,
@@ -323,7 +323,7 @@ function useMotionText() {
           {
             y: 0, opacity: 1, filter: "blur(0px)",
             duration: 0.9,
-            stagger: 0.15,
+          stagger: 0.15,
             ease: "power3.out",
             scrollTrigger: {
               trigger: btnGroup,
@@ -385,6 +385,29 @@ function useMotionText() {
           duration: 0.5,
           ease: "power3.out",
           scrollTrigger: { trigger: tag.closest(".tags"), start: "top 85%", end: "top 35%", scrub: 1 },
+        }
+      );
+      anims.push(tween);
+    });
+
+    // Float-up stagger for case buttons
+    const caseBtnGroups = document.querySelectorAll("#cases .case-btns");
+    caseBtnGroups.forEach((group) => {
+      const btns = group.querySelectorAll<HTMLElement>(".hero-btn");
+      if (!btns.length) return;
+      gsap.set(btns, { transition: "none", y: 300, opacity: 0, filter: "blur(8px)" });
+      const tween = gsap.to(btns,
+        {
+          y: 0, opacity: 1, filter: "blur(0px)",
+          duration: 0.9,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: group.closest(".case"),
+            start: "top 80%",
+            end: "top 45%",
+            scrub: 1,
+          },
         }
       );
       anims.push(tween);
@@ -916,8 +939,8 @@ function CasesSection() {
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
               <div className="case-btns">
-                <ScrambleBtn href={c.href} text="View Project" revealOnScroll target="_blank" />
-                {c.demo && <ScrambleBtn href={c.demo} text="View Demo" revealOnScroll target="_blank" secondary />}
+                <ScrambleBtn href={c.href} text="View Project" target="_blank" />
+                {c.demo && <ScrambleBtn href={c.demo} text="View Demo" target="_blank" secondary />}
               </div>
             </div>
             </div>
@@ -930,10 +953,10 @@ function CasesSection() {
 
 /* ─── EXPERIENCE ─── */
 const EXPERIENCE = [
-  { date: "2022 – Now · Sber", role: "Senior designer", desc: "Develop and maintain a design system for retail investment products. Designed key mobile app areas including market view, instrument lists, favorites, and transaction history. Contributed to design operations and team processes." },
-  { date: "2018 – 2022", role: "Self-employed", desc: "Delivered end-to-end fintech projects for clients, from discovery and UX to final UI, systems, and developer handoff." },
-  { date: "2017 – 2019 · Teorema Agency", role: "Head of design", desc: "Led design work across client projects, managed a small team, and worked closely with developers." },
-  { date: "2015 – 2017 · Matart Group LLC", role: "Founder & Lead Designer", desc: "Designed complex internal systems, dashboards, and industrial interfaces. Also worked on early fintech and crypto products." },
+  { date: "2022 – 24 · BIT, Mesra", role: "Masters in Computer Applications", desc: "Develop and maintain a design system for retail investment products. Designed key mobile app areas including market view, instrument lists, favorites, and transaction history. Contributed to design operations and team processes." },
+  { date: "2019 – 22 · JNU Jaipur", role: "Bachelors in Computer Applications", desc: "Delivered end-to-end fintech projects for clients, from discovery and UX to final UI, systems, and developer handoff." },
+  { date: "2018 – 19 · Angels Public School, Pathankot", role: "10+2 Commerce with Computer Science", desc: "Led design work across client projects, managed a small team, and worked closely with developers." },
+  { date: "2016 – 17 · Army Public School, Lucknow", role: "10th Grade", desc: "Designed complex internal systems, dashboards, and industrial interfaces. Also worked on early fintech and crypto products." },
   { date: "2012 – 2015 · Atlas-2", role: "Middle Product Designer", desc: "Designed interfaces for electronic signature issuance and document workflow systems." },
 ];
 
