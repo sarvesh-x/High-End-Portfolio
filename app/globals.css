@@ -557,10 +557,10 @@ html:hover .cursor-dot {
 .corner-plus-bl { bottom: -4px; left: -4px; }
 .corner-plus-br { bottom: -4px; right: -4px; }
 
-.corner-frame-tl { left: -4px; top: -4px; }
-.corner-frame-tr { right: -4px; top: -4px; }
-.corner-frame-bl { left: -4px; bottom: -4px; }
-.corner-frame-br { right: -4px; bottom: -4px; }
+.corner-frame-tl { left: 0; top: 0; }
+.corner-frame-tr { right: 0; top: 0; }
+.corner-frame-bl { left: 0; bottom: 0; }
+.corner-frame-br { right: 0; bottom: 0; }
 
 .telemetry-corner-tl { left: -4px; top: -4px; }
 .telemetry-corner-tr { right: -4px; top: -4px; }

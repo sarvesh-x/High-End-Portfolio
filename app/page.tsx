@@ -971,7 +971,7 @@ function LastBlocks() {
       <div className="container last">
         <div className="block">
           <div className="col">
-            <h3 className="small">Experience</h3>
+            <h3 className="small">Education</h3>
             <ul className="list">
               {EXPERIENCE.map((e, i) => (
                 <li key={i}>
