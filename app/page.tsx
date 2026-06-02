@@ -341,7 +341,8 @@ function useMotionText() {
     const lalaCols = document.querySelectorAll(".lalalast .col");
     lalaCols.forEach((col) => {
       const heading = col.querySelector("h3.small");
-      const targets = col.querySelectorAll("ul.list li h4, ul.list li p, ul.list li .hero-btn, ul.list li span.date, ul.list li svg.logo");
+      const targets = col.querySelectorAll("ul.list li h4, ul.list li p, ul.list li span.date, ul.list li svg.logo");
+      const btnTargets = col.querySelectorAll("ul.list li .hero-btn");
 
       const allTargets: (Element | null)[] = [];
       if (heading) allTargets.push(heading);
@@ -357,6 +358,18 @@ function useMotionText() {
           }
         );
         anims.push(tween);
+      }
+
+      if (btnTargets.length) {
+        const btnTween = gsap.fromTo(btnTargets,
+          { y: 30, opacity: 0, filter: "blur(8px)" },
+          {
+            y: 0, opacity: 1, filter: "blur(0px)",
+            duration: 0.6, stagger: 0.06,
+            scrollTrigger: { trigger: col, start: "top bottom", end: "top 45%", scrub: 1 },
+          }
+        );
+        anims.push(btnTween);
       }
     });
 

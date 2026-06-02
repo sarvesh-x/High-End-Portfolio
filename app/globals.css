@@ -1286,7 +1286,8 @@ html:hover .cursor-dot {
 }
 
 .block .col ul.list li .hero-btn {
-  margin-top: 8px;
+  margin-top: 24px;
+  margin-bottom: 4px;
 }
 
 .container.vse {
