@@ -1,43 +1,43 @@
 [
   {
-    "tags": ["UI", "Design System", "React"],
-    "title": "Fintech Design System",
-    "image": "/fintech-case.png",
-    "desc": "A scalable fintech design system for mobile and web products, built to improve consistency, speed up delivery, and support complex financial flows.",
+    "tags": ["UI", "React", "Web3", "Blockchain"],
+    "title": "Ethereum-Based dApp (MetaMask + Moralis)",
+    "image": "/Eth-dApp.jpeg",
+    "desc": "A decentralized application (dApp) built on the Ethereum blockchain, utilizing MetaMask for user authentication and Moralis for backend services, providing a seamless user experience for interacting with blockchain technology.",
     "href": "#"
   },
   {
-    "tags": ["App design"],
-    "title": "CrocoWallet",
-    "image": "/crocowallet-case.png",
-    "desc": "A Telegram-based crypto banking mini app with card issuance, wallet management, rewards, and referral flows.",
+    "tags": ["Android", "Web App", "Mobile App"],
+    "title": "RHCMS: Rural Housing Construction Management System",
+    "image": "/RHCMS.jpeg",
+    "desc": "A rural housing construction management system designed to streamline project management, improve communication, and enhance transparency for rural housing projects.",
     "href": "#"
   },
   {
-    "tags": ["App design"],
-    "title": "Crypto Portfolio",
-    "image": "/crypto-portfolio-case.png",
-    "desc": "A crypto portfolio and wallet app for tracking assets, monitoring market movement, and managing balances in one interface.",
+    "tags": ["AI", "Machine Learning", "Neural Networks"],
+    "title": "Smart Traffic Management System",
+    "image": "/Smart-Traffic-Management.jpeg",
+    "desc": "A smart traffic management system designed to optimize traffic flow and reduce congestion in urban areas.",
     "href": "#"
   },
   {
-    "tags": ["Concept"],
-    "title": "Telegram wallet",
-    "image": "/telegram-wallet-case.png",
-    "desc": "A redesign concept for a Telegram wallet focused on clarity, visual hierarchy, and a more premium product feel.",
+    "tags": ["AI", "Healthcare", "Voice Assistant"],
+    "title": "MeVo: Medical Voice Assistant",
+    "image": "/MeVo.jpeg",
+    "desc": "A concept for a medical voice assistant designed to improve patient-provider communication and streamline clinical workflows.",
     "href": "#"
   },
   {
-    "tags": ["App design", "Dashboard", "Landing"],
-    "title": "Cunex crypto widget",
-    "image": "/cunex-crypto-widget-case.png",
-    "desc": "A crypto exchange widget, dashboard, and landing experience designed to support onboarding, KYC, and transaction monitoring.",
+    "tags": ["App design", "Portfolio", "Landing"],
+    "title": "High End Portfolio",
+    "image": "/High-End-Portfolio.png",
+    "desc": "A High End Portfolio website design for Developer, featuring a sleek and modern design, interactive elements, and a focus on showcasing Projects & Experience.",
     "href": "#"
   },
   {
     "tags": ["Ecommerce", "Design System","Cloud"],
     "title": "Skateboard Shop Ecommerce Starter Kit",
-    "image": "/Ecommerce-Lite.png",
+    "image": "/Ecommerce-Lite.jpeg",
     "desc": "An ecommerce starter kit for a skateboard shop, including a design system, backend integration, and marketing materials.",
     "href": "#"
   }

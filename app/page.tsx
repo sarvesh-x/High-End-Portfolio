@@ -805,7 +805,7 @@ function CasesSection() {
               </ul>
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
-              <ScrambleBtn href={c.href} text="VIEW CASE" revealOnScroll />
+              <ScrambleBtn href={c.href} text="View Project" revealOnScroll />
             </div>
             </div>
           );
