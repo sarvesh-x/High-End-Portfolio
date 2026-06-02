@@ -11,6 +11,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 const nav = ["cv", "github", "patreon", "linkedin", "email"];
 
+let lenisInstance: Lenis | null = null;
+
 function useLenis() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -18,6 +20,7 @@ function useLenis() {
       wheelMultiplier: 0.78,
       smoothWheel: true
     });
+    lenisInstance = lenis;
 
     let raf = 0;
     function loop(time: number) {
@@ -29,11 +32,12 @@ function useLenis() {
     return () => {
       cancelAnimationFrame(raf);
       lenis.destroy();
+      lenisInstance = null;
     };
   }, []);
 }
 
-const chars = "कखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसहािीुूृेैोौ";
+const chars = "कखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह";
 
 function useScramble(label: string) {
   const [text, setText] = useState(label);
@@ -59,13 +63,13 @@ function useScramble(label: string) {
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = null;
       }
-      i += 0.35;
+      i += 0.3;
     }, 20);
     timeoutRef.current = setTimeout(() => {
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = null;
       setText(label);
-    }, 600);
+    }, Math.max(600, label.length * 67 + 200));
   }
 
   function reset() {
@@ -573,17 +577,25 @@ function ProgressBar() {
 }
 
 function ScrollIndicator() {
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const lenis = lenisInstance;
+    if (!lenis) return;
+    const unsub = lenis.on("scroll", (e) => {
+      setHidden(e.progress > 0.1);
+    });
+    return unsub;
+  }, []);
 
   return (
-    <motion.div className="scroll-indicator" style={{ opacity }}>
+    <div className="scroll-indicator" style={{ opacity: hidden ? 0 : 1, transition: "opacity 0.6s ease" }}>
       <svg width="12" height="20" viewBox="0 0 22 22" fill="none">
         <rect x="5" y="1.5" width="12" height="17" rx="6" stroke="currentColor" strokeWidth="1.2" />
         <rect x="9.5" y="4" width="3" height="5" rx="1.5" fill="currentColor" />
       </svg>
       <span>Scroll</span>
-    </motion.div>
+    </div>
   );
 }
 
@@ -596,13 +608,14 @@ function Corner({ className }: { className: string }) {
 }
 
 /* ─── SCRAMBLE BUTTON ─── */
-function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className }: {
+function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, className, onClick }: {
   text: string;
   cursorText?: string;
   secondary?: boolean;
   revealOnScroll?: boolean;
   href?: string;
   className?: string;
+  onClick?: () => void;
 }) {
   const { text: disp, scramble, reset } = useScramble(text);
   const [fixedW, setFixedW] = useState(0);
@@ -636,6 +649,7 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
       style={sStyle}
       onMouseEnter={scramble}
       onMouseLeave={reset}
+      onClick={onClick}
     >
       <Corner className="corner-btn corner-btn-tl" />
       <Corner className="corner-btn corner-btn-tr" />
@@ -654,7 +668,7 @@ function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) 
       </span>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p className="p">I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
-      <ScrambleBtn text="WRITE TO TELEGRAM" cursorText="Send me message" />
+      <ScrambleBtn text="Explore" cursorText="Scroll down" onClick={() => lenisInstance?.scrollTo("#spec", { duration: 2 })} />
     </div>
   );
 }
@@ -718,8 +732,8 @@ function SpecSection() {
           I&apos;m currently open to full-time Full Stack Developer roles in product companies or innovative startups. I&apos;m also available for selected high-impact contract work.
         </p>
         <ul className="btn-group">
-          <li><ScrambleBtn className="specialize-btn-1" text="WRITE TO TELEGRAM" cursorText="Send me message" /></li>
-          <li><ScrambleBtn className="specialize-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary /></li>
+          <li><ScrambleBtn className="hero-btn-1" text="WRITE TO WhatsApp" cursorText="Send me message" /></li>
+          <li><ScrambleBtn className="hero-btn-2" text="DOWNLOAD CV" cursorText="Download CV" secondary /></li>
         </ul>
       </div>
     </section>

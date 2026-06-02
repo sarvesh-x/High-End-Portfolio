@@ -18,7 +18,8 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Sarvesh Kumar - Full Stack Developer",
-  description: "A passionate full stack developer with expertise in React, Node.js, and cloud technologies."
+  description: "A passionate full stack developer with expertise in React, Node.js, and cloud technologies.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
