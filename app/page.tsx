@@ -20,6 +20,7 @@ function useLenis() {
       wheelMultiplier: 0.78,
       smoothWheel: true,
       touchMultiplier: 1.5,
+      gestureOrientation: "vertical",
     });
     lenisInstance = lenis;
 
@@ -750,6 +751,7 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
   const { text: disp, scramble, reset } = useScramble(text);
   const [fixedW, setFixedW] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const btnRef = useRef<HTMLAnchorElement>(null);
 
   const measured = useCallback((el: HTMLSpanElement | null) => {
@@ -779,10 +781,12 @@ function ScrambleBtn({ text, cursorText, secondary, revealOnScroll, href, classN
       rel={target ? "noopener noreferrer" : undefined}
       data-cursor-text={cursorText ?? text}
       data-sound-hover
+      data-expanded={expanded || undefined}
       style={sStyle}
       onMouseEnter={scramble}
       onMouseLeave={reset}
-      onClick={onClick}
+      onClick={() => { scramble(); onClick?.(); setExpanded(true); setTimeout(() => setExpanded(false), 300); }}
+      onTouchStart={scramble}
     >
       <Corner className="corner-btn corner-btn-tl" />
       <Corner className="corner-btn corner-btn-tr" />
@@ -1161,7 +1165,7 @@ export default function Page() {
               </g>
             </g>
           </svg>
-        </div>
+        </div>  
       </div>
     </>
   );

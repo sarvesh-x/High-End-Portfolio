@@ -28,7 +28,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <style>{`/* critical loader styles */
 .boot-loading body>:not(.loader){opacity:0!important;visibility:hidden!important}
-body{overflow:hidden;margin:0}
 .loader{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:1;visibility:visible;background:#0f0f0f;overflow:hidden}
 .loader-content{position:absolute;top:50%;left:50%;z-index:2;display:flex;flex-direction:column;align-items:center;gap:20px;transform:translate(-50%,-50%)}
 .loader-content svg{display:block;width:30px;height:auto}

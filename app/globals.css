@@ -533,10 +533,14 @@ html:hover .cursor-dot {
 .corner-btn-bl { bottom: -4px; left: -4px; }
 .corner-btn-br { bottom: -4px; right: -4px; }
 
-.hero-btn:hover .corner-btn-tl { top: -8px; left: -8px; }
-.hero-btn:hover .corner-btn-tr { top: -8px; right: -8px; }
-.hero-btn:hover .corner-btn-bl { bottom: -8px; left: -8px; }
-.hero-btn:hover .corner-btn-br { bottom: -8px; right: -8px; }
+.hero-btn:hover .corner-btn-tl,
+.hero-btn[data-expanded] .corner-btn-tl { top: -8px; left: -8px; }
+.hero-btn:hover .corner-btn-tr,
+.hero-btn[data-expanded] .corner-btn-tr { top: -8px; right: -8px; }
+.hero-btn:hover .corner-btn-bl,
+.hero-btn[data-expanded] .corner-btn-bl { bottom: -8px; left: -8px; }
+.hero-btn:hover .corner-btn-br,
+.hero-btn[data-expanded] .corner-btn-br { bottom: -8px; right: -8px; }
 
 .hero-tags {
   display: flex;
@@ -715,6 +719,7 @@ html:hover .cursor-dot {
     border: none;
     inset: 0;
     justify-content: flex-end;
+    z-index: 4;
   }
 
   .telemetry-panel {
