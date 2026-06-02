@@ -445,12 +445,17 @@ function Nav() {
     return () => audioRef.current?.pause();
   }, []);
 
+  useEffect(() => {
+    const svg = document.getElementById("wave") as unknown as SVGSVGElement;
+    if (!svg) return;
+    soundOn ? svg.unpauseAnimations() : svg.pauseAnimations();
+  }, [soundOn]);
+
   function toggleSound() {
     sounds.unlock();
-    if (soundOn) {
-      audioRef.current?.pause();
-      audioRef.current = null;
-      setSoundOn(false);
+    if (audioRef.current) {
+      audioRef.current.volume = soundOn ? 0 : 0.4;
+      setSoundOn(!soundOn);
       return;
     }
 
@@ -489,16 +494,45 @@ function Nav() {
         data-cursor-text="Enable sound"
         data-sound-click
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect className="wave-bar" x="2" y="10" width="2" height="6" rx="1" />
-          <rect className="wave-bar" x="5" y="7" width="2" height="12" rx="1" />
-          <rect className="wave-bar" x="8" y="4" width="2" height="18" rx="1" />
-          <rect className="wave-bar" x="11" y="8" width="2" height="10" rx="1" />
-          <rect className="wave-bar" x="14" y="6" width="2" height="14" rx="1" />
-          <rect className="wave-bar" x="17" y="9" width="2" height="8" rx="1" />
-          <rect className="wave-bar" x="20" y="4" width="2" height="18" rx="1" />
-          <rect className="wave-bar" x="23" y="7" width="2" height="12" rx="1" />
-          <rect className="wave-bar" x="26" y="10" width="2" height="6" rx="1" />
+        <svg id="wave" width="48" height="48" fill="none" viewBox="0 0 500 500">
+          <g transform="matrix(1.5,0,0,1.5,90.33,90.332)" id="Record Outlines">
+            <g transform="matrix(1,0,0,1,106.34,106.336)">
+              <path fill="#000000" d="M-34.781,86.922C-82.713,67.724,-106.09,13.138,-86.892,-34.785C-67.694,-82.717,-13.11,-106.086,34.822,-86.896C82.713,-67.699,106.09,-13.104,86.926,34.819C67.727,82.709,13.142,106.086,-34.781,86.922Z" />
+            </g>
+            <g transform="matrix(1,0,0,1,106.34,106.336)">
+              <path fill="#ffffff" d="M-2.462,6.218C-5.889,4.847,-7.56,0.961,-6.214,-2.466C-4.811,-5.892,-0.933,-7.556,2.503,-6.218C5.93,-4.847,7.593,-0.928,6.222,2.499C4.851,5.926,0.932,7.589,-2.462,6.218ZM4.976,-12.42C-1.877,-15.161,-9.649,-11.835,-12.391,-4.981C-15.166,1.881,-11.797,9.678,-4.978,12.419C1.876,15.161,9.682,11.834,12.423,4.981C15.165,-1.881,11.838,-9.645,4.976,-12.42Z" />
+            </g>
+            <g transform="matrix(1,0,0,1,106.357,106.352)">
+              <path fill="#ffffff" d="M-9.958,24.815C-23.631,19.324,-30.293,3.719,-24.844,-9.954C-19.362,-23.636,-3.758,-30.33,9.924,-24.847C23.639,-19.356,30.3,-3.752,24.843,9.921C19.327,23.603,3.757,30.297,-9.958,24.815ZM14.889,-37.25C-5.68,-45.475,-29.023,-35.487,-37.247,-14.918C-45.48,5.65,-35.484,28.994,-14.915,37.217C5.645,45.475,28.988,35.488,37.221,14.919C45.479,-5.65,35.49,-29.026,14.889,-37.25Z" />
+            </g>
+          </g>
+          <g id="Spin Outlines">
+            <g transform="translate(249.92, 249.735)">
+              <g transform="rotate(0)">
+                <animateTransform repeatCount="indefinite" type="rotate" attributeName="transform" dur="0.979s" begin="0s" calcMode="spline" values="0; 360" keyTimes="0; 1" keySplines="0 0 1 1" fill="freeze" />
+                <g transform="scale(1.5,1.5) translate(-75.42,-74.735)">
+                <g transform="matrix(1,0,0,1,108.571,107.121)">
+                  <path fill="#ffffff" d="M16.52,-12.487C17.205,-14.216,16.36,-16.147,14.655,-16.833C12.925,-17.518,11.002,-16.699,10.317,-14.969C5.487,-2.984,-3.724,5.925,-14.723,10.656C-16.419,11.374,-17.205,13.339,-16.486,15.035C-15.734,16.732,-13.778,17.518,-12.082,16.799C-12.015,16.766,-12.015,16.732,-11.948,16.699C0.555,11.283,11.038,1.128,16.52,-12.487Z" />
+                </g>
+                <g transform="matrix(1,0,0,1,126.235,124.375)">
+                  <path fill="#ffffff" d="M21.806,-24.158C20.11,-24.844,18.153,-23.999,17.467,-22.303C9.92,-3.464,-4.572,10.577,-21.873,17.957C-23.577,18.709,-24.355,20.665,-23.636,22.362C-22.884,24.059,-20.928,24.844,-19.231,24.125C-19.165,24.059,-19.098,24,-19.007,23.966C-0.234,15.867,15.471,0.623,23.669,-19.82C24.355,-21.516,23.503,-23.472,21.806,-24.158Z" />
+                </g>
+                <g transform="matrix(1,0,0,1,117.4,115.755)">
+                  <path fill="#ffffff" d="M18.238,-20.502C16.508,-21.187,14.577,-20.368,13.891,-18.638C7.723,-3.234,-4.129,8.232,-18.295,14.3L-18.262,14.3C-19.992,15.019,-20.778,17.009,-20.059,18.705C-19.306,20.41,-17.35,21.187,-15.654,20.435C-15.586,20.41,-15.553,20.377,-15.486,20.31C0.184,13.548,13.272,0.886,20.091,-16.155C20.777,-17.86,19.934,-19.816,18.238,-20.502Z" />
+                </g>
+                <g transform="matrix(1,0,0,1,42.293,42.365)">
+                  <path fill="#ffffff" d="M16.487,-15.053C15.743,-16.75,13.778,-17.535,12.081,-16.783C12.014,-16.783,11.981,-16.715,11.956,-16.715C-0.581,-11.3,-11.062,-1.146,-16.519,12.503C-17.205,14.199,-16.386,16.164,-14.656,16.85C-12.959,17.535,-11.003,16.682,-10.318,14.986C-5.512,2.967,3.724,-5.942,14.732,-10.647C16.428,-11.358,17.205,-13.323,16.487,-15.053Z" />
+                </g>
+                <g transform="matrix(1,0,0,1,24.604,25.094)">
+                  <path fill="#ffffff" d="M23.636,-22.362C22.917,-24.058,20.928,-24.843,19.223,-24.124C19.165,-24.091,19.098,-23.999,19.031,-23.965C0.26,-15.867,-15.479,-0.656,-23.669,19.821C-24.354,21.551,-23.51,23.473,-21.814,24.159C-20.084,24.844,-18.154,24.034,-17.469,22.295C-9.896,3.465,4.572,-10.543,21.872,-17.956C23.569,-18.709,24.355,-20.665,23.636,-22.362Z" />
+                </g>
+                <g transform="matrix(1,0,0,1,33.468,33.748)">
+                  <path fill="#ffffff" d="M18.266,-14.334C19.962,-15.052,20.782,-17.008,20.029,-18.713C19.31,-20.41,17.347,-21.187,15.65,-20.477C15.583,-20.443,15.558,-20.376,15.457,-20.343C-0.18,-13.582,-13.276,-0.886,-20.097,16.122C-20.782,17.852,-19.963,19.816,-18.233,20.501C-16.536,21.187,-14.58,20.368,-13.895,18.638C-7.727,3.192,4.125,-8.266,18.266,-14.3L18.266,-14.334Z" />
+                </g>
+              </g>
+            </g>
+            </g>
+          </g>
         </svg>
       </button>
 
@@ -608,12 +642,14 @@ function ScrollIndicator() {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const lenis = lenisInstance;
-    if (!lenis) return;
-    const unsub = lenis.on("scroll", (e) => {
-      setHidden(e.progress > 0.1);
-    });
-    return unsub;
+    const spec = document.getElementById("spec");
+    if (!spec) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHidden(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(spec);
+    return () => observer.disconnect();
   }, []);
 
   return (

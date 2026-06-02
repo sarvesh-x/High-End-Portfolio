@@ -224,13 +224,13 @@ html:hover .cursor-dot {
   padding: 0;
   background: transparent;
   color: rgba(244, 240, 232, 0.82);
-  opacity: 0.18;
+  opacity: 0.5;
   transition: opacity 260ms ease, transform 260ms ease;
 }
 
 .wave-mark:hover,
 .wave-mark.is-on {
-  opacity: 0.78;
+  opacity: 1;
 }
 
 .wave-mark:focus-visible {
@@ -240,33 +240,6 @@ html:hover .cursor-dot {
 
 .wave-mark:active {
   transform: scale(0.94);
-}
-
-.wave-mark.is-on svg {
-  color: #d7ff63;
-}
-
-.wave-mark #wave path {
-  transform-origin: 50% 50%;
-}
-
-.wave-mark.is-on #wave path {
-  animation: pulse 1.2s ease-in-out infinite;
-}
-
-.wave-mark.is-on #wave path:nth-child(1) { animation-delay: 0s; }
-.wave-mark.is-on #wave path:nth-child(2) { animation-delay: 0.1s; }
-.wave-mark.is-on #wave path:nth-child(3) { animation-delay: 0.2s; }
-.wave-mark.is-on #wave path:nth-child(4) { animation-delay: 0.3s; }
-.wave-mark.is-on #wave path:nth-child(5) { animation-delay: 0.4s; }
-.wave-mark.is-on #wave path:nth-child(6) { animation-delay: 0.5s; }
-.wave-mark.is-on #wave path:nth-child(7) { animation-delay: 0.6s; }
-.wave-mark.is-on #wave path:nth-child(8) { animation-delay: 0.7s; }
-.wave-mark.is-on #wave path:nth-child(9) { animation-delay: 0.8s; }
-
-@keyframes pulse {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.7); }
 }
 
 .header-nav {
@@ -969,7 +942,7 @@ html:hover .cursor-dot {
   font-weight: 300;
   color: var(--muted);
 }
-/* ===== CASES SECTION (matveyan) ===== */
+/* ===== CASES SECTION ===== */
 .titleGroup {
   display: flex;
   flex-direction: column;
@@ -1612,28 +1585,7 @@ body.loader-active {
   }
 }
 
-/* ===== WAVE ANIMATION ===== */
-.wave-bar {
-  transition: color 0.26s ease;
-}
-.wave-mark.is-on .wave-bar {
-  animation: pulse 1.2s ease-in-out infinite;
-  transform-origin: 50% 50%;
-}
-.wave-mark.is-on .wave-bar:nth-child(1) { animation-delay: 0s; }
-.wave-mark.is-on .wave-bar:nth-child(2) { animation-delay: 0.1s; }
-.wave-mark.is-on .wave-bar:nth-child(3) { animation-delay: 0.2s; }
-.wave-mark.is-on .wave-bar:nth-child(4) { animation-delay: 0.3s; }
-.wave-mark.is-on .wave-bar:nth-child(5) { animation-delay: 0.4s; }
-.wave-mark.is-on .wave-bar:nth-child(6) { animation-delay: 0.5s; }
-.wave-mark.is-on .wave-bar:nth-child(7) { animation-delay: 0.6s; }
-.wave-mark.is-on .wave-bar:nth-child(8) { animation-delay: 0.7s; }
-.wave-mark.is-on .wave-bar:nth-child(9) { animation-delay: 0.8s; }
 
-@keyframes pulse {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.7); }
-}
 
 
 
