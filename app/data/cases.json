@@ -32,13 +32,15 @@
     "title": "High End Portfolio",
     "image": "/High-End-Portfolio.png",
     "desc": "A High End Portfolio website design for Developer, featuring a sleek and modern design, interactive elements, and a focus on showcasing Projects & Experience.",
-    "href": "https://github.com/sarvesh-x/High-End-Portfolio"
+    "href": "https://github.com/sarvesh-x/High-End-Portfolio",
+    "demo": "https://sarveshkumar.onrender.com/"
   },
   {
     "tags": ["Ecommerce", "Design System","Cloud"],
     "title": "Skateboard Shop Ecommerce Starter Kit",
     "image": "/Ecommerce-Lite.jpeg",
     "desc": "An ecommerce starter kit for a skateboard shop, including a design system, backend integration, and marketing materials.",
-    "href": "https://github.com/sarvesh-x/ecommerce"
+    "href": "https://github.com/sarvesh-x/ecommerce",
+    "demo": "https://skateboard-store-mf46.onrender.com/"
   }
 ]

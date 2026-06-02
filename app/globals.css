@@ -492,7 +492,7 @@ html:hover .cursor-dot {
 .btn-group {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 40px;
   justify-content: center;
   margin-top: 24px;
 }
@@ -1140,6 +1140,11 @@ html:hover .cursor-dot {
   line-height: 180%;
   font-weight: 300;
   color: var(--muted);
+}
+.case-btns {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 .caseInfo h3 {
   margin: 10px 0;

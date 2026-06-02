@@ -672,7 +672,7 @@ function ScrollIndicator() {
     const spec = document.getElementById("spec");
     if (!spec) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setHidden(entry.isIntersecting),
+      ([entry]) => { if (entry.isIntersecting) setHidden(true); },
       { threshold: 0 }
     );
     observer.observe(spec);
@@ -915,7 +915,10 @@ function CasesSection() {
               </ul>
               <h3 data-motion-text>{c.title}</h3>
               <p data-motion-text>{c.desc}</p>
-              <ScrambleBtn href={c.href} text="View Project" revealOnScroll target="_blank" />
+              <div className="case-btns">
+                <ScrambleBtn href={c.href} text="View Project" revealOnScroll target="_blank" />
+                {c.demo && <ScrambleBtn href={c.demo} text="View Demo" revealOnScroll target="_blank" secondary />}
+              </div>
             </div>
             </div>
           );
