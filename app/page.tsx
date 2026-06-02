@@ -375,6 +375,21 @@ function useMotionText() {
       anims.push(tween);
     });
 
+    // Blur reveal for case tags (borders)
+    const caseTags = document.querySelectorAll("#cases .tags li");
+    caseTags.forEach((tag) => {
+      const tween = gsap.fromTo(tag,
+        { opacity: 0, filter: "blur(10px)" },
+        {
+          opacity: 1, filter: "blur(0px)",
+          duration: 0.5,
+          ease: "power3.out",
+          scrollTrigger: { trigger: tag.closest(".tags"), start: "top 85%", end: "top 35%", scrub: 1 },
+        }
+      );
+      anims.push(tween);
+    });
+
     return () => {
       anims.forEach((a) => a.scrollTrigger?.kill());
     };
