@@ -28,6 +28,7 @@ html {
   background: var(--bg);
   color: var(--bone);
   scroll-behavior: auto;
+  touch-action: manipulation;
 }
 
 body {

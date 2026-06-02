@@ -18,7 +18,8 @@ function useLenis() {
     const lenis = new Lenis({
       lerp: 0.08,
       wheelMultiplier: 0.78,
-      smoothWheel: true
+      smoothWheel: true,
+      touchMultiplier: 1.5,
     });
     lenisInstance = lenis;
 
@@ -1139,11 +1140,11 @@ export default function Page() {
           <svg viewBox="0 -700 14716 2224" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="gold-hover" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#B78628"/>
-                <stop offset="25%" stop-color="#C69320"/>
-                <stop offset="50%" stop-color="#DBA514"/>
-                <stop offset="75%" stop-color="#FCC201"/>
-                <stop offset="100%" stop-color="#D4AF37"/>
+                <stop offset="0%" stopColor="#B78628"/>
+                <stop offset="25%" stopColor="#C69320"/>
+                <stop offset="50%" stopColor="#DBA514"/>
+                <stop offset="75%" stopColor="#FCC201"/>
+                <stop offset="100%" stopColor="#D4AF37"/>
               </linearGradient>
             </defs>
             <g transform="translate(-157, 1485)" fill="white">
