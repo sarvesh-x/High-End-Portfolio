@@ -150,7 +150,9 @@ let _hasMoved = false;
 const CURSOR_TARGET_SELECTOR = "[data-cursor-text], a, button, .hero-btn";
 
 function getCursorTarget(target: EventTarget | null) {
-  return (target as HTMLElement | null)?.closest?.(CURSOR_TARGET_SELECTOR) as HTMLElement | null;
+  const el = (target as HTMLElement | null)?.closest?.(CURSOR_TARGET_SELECTOR) as HTMLElement | null;
+  if (el?.closest("[data-hero-faded]")) return null;
+  return el;
 }
 
 function getCursorWrap(target: HTMLElement) {
@@ -207,7 +209,14 @@ function cursorLoop() {
   if (!_hasMoved) { _raf = requestAnimationFrame(cursorLoop); return; }
 
   if (_isHovering && _cursorTarget?.isConnected) {
-    updateCursorTargetBox(_cursorTarget);
+    if (_cursorTarget.closest("[data-hero-faded]")) {
+      _isHovering = false;
+      _cursorTarget = null;
+      _boxEl?.classList.remove("is-hover");
+      cursorHide();
+    } else {
+      updateCursorTargetBox(_cursorTarget);
+    }
   }
 
   const dist = Math.hypot(_targetCx - _boxCx, _targetCy - _boxCy);
@@ -1232,7 +1241,8 @@ export default function Page() {
         el.style.setProperty("--hero-scale", String(1 - e * 0.25));
         el.style.setProperty("--hero-opacity", String(1 - e));
         el.style.setProperty("--hero-blur", e > 0 ? `blur(${e * 15}px)` : "");
-        // Hide hero when opacity drops below 0.95 (e > 0.95)
+        el.style.pointerEvents = e > 0.5 ? "none" : "";
+        el.toggleAttribute("data-hero-faded", e > 0.5);
         el.style.display = e > 0.95 ? "none" : "";
         prevE = e;
       }
