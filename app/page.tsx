@@ -1105,7 +1105,21 @@ const SKILLS = [
   { title: "Testing & Quality", desc: "Unit testing, integration testing, debugging, and code optimization for production-ready applications." }
 ];
 
-const PROJECTS = [
+type ProjectItem = {
+  icon?: string;
+  circleColor?: string;
+  pathColor?: string;
+  iconViewBox: string;
+  name: string;
+  desc: string;
+  href?: string;
+  rawSvgInner?: string;
+  soon?: boolean;
+  pathTransform?: string;
+  bgRect?: { rx?: number; fill?: string };
+};
+
+const PROJECTS: ProjectItem[] = [
   {
     icon: "M373.7 709.3h-50.4V358.5h50.4v350.8zm74-350.8h136.2c129.7 0 186.7 92.7 186.7 175.5 0 90.1-70.4 175.5-186 175.5H447.7v-351zm50.4 305.6h80.2c114.3 0 140.5-86.8 140.5-130 0-70.4-44.9-130-143.1-130h-77.6v260zM381.6 285.5c0 18-14.7 33.1-33.1 33.1-18.3 0-33.1-15.1-33.1-33.1 0-18.3 14.7-33.1 33.1-33.1 18.3 0 33.1 15.1 33.1 33.1z",
     circleColor: "#8eda14bd",
