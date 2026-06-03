@@ -212,8 +212,8 @@ function cursorLoop() {
 
   const dist = Math.hypot(_targetCx - _boxCx, _targetCy - _boxCy);
   const ease = _isHovering
-    ? 0.08 - 0.04 * Math.min(dist / 80, 1)
-    : 0.08;
+    ? 0.18 - 0.12 * Math.min(dist / 80, 1)
+    : 0.13;
   _boxCx = lerp(_boxCx, _targetCx, ease);
   _boxCy = lerp(_boxCy, _targetCy, ease);
   _boxW = lerp(_boxW, _targetW, ease);
