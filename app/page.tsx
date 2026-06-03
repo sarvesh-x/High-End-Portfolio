@@ -214,6 +214,10 @@ function cursorLoop() {
       _cursorTarget = null;
       _boxEl?.classList.remove("is-hover");
       cursorHide();
+      _targetCx = _mouseX;
+      _targetCy = _mouseY;
+      _targetW = 28;
+      _targetH = 28;
     } else {
       updateCursorTargetBox(_cursorTarget);
     }
