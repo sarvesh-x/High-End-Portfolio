@@ -1219,7 +1219,7 @@ function LastBlocks() {
                   )}
                   <h4>{p.name.toUpperCase()}{p.soon && <i className="soon">  soon</i>}</h4>
                   <p>{p.desc}</p>
-                  {p.href && <ScrambleBtn text="Visit" href={p.href} revealOnScroll target="_blank" />}
+                  {p.href && <ScrambleBtn text="Visit Profile" href={p.href} revealOnScroll target="_blank" />}
                 </li>
               ))}
             </ul>
