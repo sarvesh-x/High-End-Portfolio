@@ -833,17 +833,14 @@ function ProgressBar() {
 
 function ScrollIndicator() {
   const [hidden, setHidden] = useState(false);
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const spec = document.getElementById("spec");
-    if (!spec) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setHidden(true); },
-      { threshold: 0 }
-    );
-    observer.observe(spec);
-    return () => observer.disconnect();
-  }, []);
+    const unsub = scrollYProgress.on("change", (v) => {
+      setHidden(v > 0.1);
+    });
+    return unsub;
+  }, [scrollYProgress]);
 
   return (
     <div className="scroll-indicator" style={{ opacity: hidden ? 0 : 1, transition: "opacity 0.6s ease" }}>
