@@ -1134,6 +1134,15 @@ type ProjectItem = {
 
 const PROJECTS: ProjectItem[] = [
   {
+    icon: "M320 768V448h96v320h-96zm48-352a56 56 0 1 1 0-112 56 56 0 0 1 0 112zM768 768h-96V608c0-40-16-64-48-64s-48 24-48 64v160h-96V448h96v64c16-32 40-48 72-48 56 0 96 40 96 112v192z",
+    circleColor: "#0A66C2",
+    pathColor: "#ffffff",
+    iconViewBox: "0 0 1024 1024",
+    name: "LinkedIn",
+    desc: "Professional profile showcasing experience, skills, and network in the tech industry.",
+    href: "https://linkedin.com/in/sarvesh-kumar-developer",
+  },
+  {
     icon: "M373.7 709.3h-50.4V358.5h50.4v350.8zm74-350.8h136.2c129.7 0 186.7 92.7 186.7 175.5 0 90.1-70.4 175.5-186 175.5H447.7v-351zm50.4 305.6h80.2c114.3 0 140.5-86.8 140.5-130 0-70.4-44.9-130-143.1-130h-77.6v260zM381.6 285.5c0 18-14.7 33.1-33.1 33.1-18.3 0-33.1-15.1-33.1-33.1 0-18.3 14.7-33.1 33.1-33.1 18.3 0 33.1 15.1 33.1 33.1z",
     circleColor: "#8eda14bd",
     pathColor: "#ffffff",
@@ -1210,7 +1219,7 @@ function LastBlocks() {
                   )}
                   <h4>{p.name.toUpperCase()}{p.soon && <i className="soon">  soon</i>}</h4>
                   <p>{p.desc}</p>
-                  {p.href && <ScrambleBtn text="View Publication" href={p.href} revealOnScroll target="_blank" />}
+                  {p.href && <ScrambleBtn text="Visit" href={p.href} revealOnScroll target="_blank" />}
                 </li>
               ))}
             </ul>
