@@ -1090,20 +1090,19 @@ function CasesSection() {
 const EXPERIENCE = [
   { date: "2022 – 24 · BIT, Mesra", role: "Masters in Computer Applications", desc: "Develop and maintain a design system for retail investment products. Designed key mobile app areas including market view, instrument lists, favorites, and transaction history. Contributed to design operations and team processes." },
   { date: "2019 – 22 · JNU Jaipur", role: "Bachelors in Computer Applications", desc: "Delivered end-to-end fintech projects for clients, from discovery and UX to final UI, systems, and developer handoff." },
-  { date: "2018 – 19 · Angels Public School, Pathankot", role: "10+2 Commerce with Computer Science", desc: "Led design work across client projects, managed a small team, and worked closely with developers." },
-  { date: "2016 – 17 · Army Public School, Lucknow", role: "10th Grade", desc: "During 10th standard, participated in school-level gaming, webpage design, and software review competitions. Volunteered in the Google Web Rangers workshop, gaining technical, creative, teamwork, and digital awareness experience." },
-  { date: "2012 – 2015 · Atlas-2", role: "Middle Product Designer", desc: "Designed interfaces for electronic signature issuance and document workflow systems." },
+  { date: "2018 – 19 · APS, Pathankot", role: "10+2 Commerce with Computer Science", desc: "Led design work across client projects, managed a small team, and worked closely with developers." },
+  { date: "2016 – 17 · APS, Lucknow", role: "10th Grade", desc: "During 10th standard, participated in school-level gaming, webpage design, and software review competitions. Volunteered in the Google Web Rangers workshop, gaining technical, creative, teamwork, and digital awareness experience." }
 ];
 
 const SKILLS = [
-  { title: "UI & UX", desc: "Modern design with a focus on information clarity, data, and minimalism." },
-  { title: "Design System", desc: "Design system development and maintenance, including documentation." },
-  { title: "AI tools: Codex, ChatGPT, Claude", desc: "Use AI tools to accelerate research, copy iteration, documentation, prototyping, and repetitive production tasks." },
-  { title: "Design management", desc: "Leading a small design team and collaborating closely with developers and product stakeholders." },
-  { title: "Motion & Prototype", desc: "Interface animation and high-fidelity prototyping." },
-  { title: "Presentation", desc: "Whitepapers, financial reports, and investor presentations." },
-  { title: "Icon Design", desc: "UI icon design, motion assets, SVG, and Lottie." },
-  { title: "3D", desc: "3D visuals for interfaces, product storytelling, and WebGL-based interactive presentations." },
+  { title: "Frontend", desc: "React, Next.js, TypeScript, Tailwind CSS, Framer Motion, GSAP for building modern, responsive, and interactive user interfaces." },
+  { title: "Backend", desc: "Node.js, Express, REST APIs, GraphQL, middleware development, and server-side architecture design." },
+  { title: "Databases", desc: "PostgreSQL, MongoDB, Firebase, and data modeling for scalable and efficient data storage." },
+  { title: "Full Stack Frameworks", desc: "Next.js for full-stack development, enabling seamless client-server integration and rapid deployment." },
+  { title: "DevOps & Cloud", desc: "Docker containerization, CI/CD pipelines, AWS services, deployment automation, and infrastructure management." },
+  { title: "Version Control", desc: "Git, GitHub, branching strategies, and collaborative development workflows." },
+  { title: "API Development", desc: "RESTful API design, authentication (JWT), error handling, and API documentation." },
+  { title: "Testing & Quality", desc: "Unit testing, integration testing, debugging, and code optimization for production-ready applications." }
 ];
 
 const PROJECTS = [
@@ -1120,7 +1119,7 @@ const PROJECTS = [
     name: "Fintech Design System",
     desc: "A design system focused on financial products, delivered as a component library in Figma and web platforms (React).",
     soon: true,
-  },
+  }
 ];
 
 function LastBlocks() {
