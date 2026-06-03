@@ -942,7 +942,7 @@ function Hero({ heroRef }: { heroRef: React.RefObject<HTMLDivElement | null> }) 
       </span>
       <h1><strong>Full</strong> <strong>Stack</strong> developer crafting digital experiences</h1>
       <p className="p">I build modern web applications with clean code, thoughtful architecture, and a focus on the details that matter</p>
-      <ScrambleBtn text="Explore" cursorText="Scroll down" onClick={() => lenisInstance?.scrollTo("#spec", { duration: 2 })} />
+      <ScrambleBtn text="Explore" cursorText="Scroll down" onClick={() => lenisInstance?.scrollTo("#spec", { duration: 3 })} />
     </div>
   );
 }
