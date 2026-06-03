@@ -1179,6 +1179,9 @@ h2 a { text-decoration: none; }
   gap: 24px;
   flex-wrap: wrap;
 }
+.case-btns .hero-btn {
+  font-size: 12px;
+}
 .caseInfo h3 {
   margin: 10px 0;
   padding: 0;
@@ -1229,7 +1232,7 @@ h2 a { text-decoration: none; }
   color: var(--muted);
   font-weight: 500;
   margin: 0 0 24px;
-  white-space: nowrap;
+  min-height: 2.4em;
 }
 
 .block .col ul.list {
@@ -1237,6 +1240,7 @@ h2 a { text-decoration: none; }
   padding: 0;
   margin: 0;
   display: flex;
+  flex-direction: column;
   counter-reset: list-item;
 }
 
@@ -1313,6 +1317,7 @@ h2 a { text-decoration: none; }
 .block .col ul.list li .hero-btn {
   margin-top: 16px;
   margin-bottom: 4px;
+  font-size: 12px;
 }
 
 .container.vse {
