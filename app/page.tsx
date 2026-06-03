@@ -689,7 +689,7 @@ function Nav() {
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       className="site-header-frame"
     >
-      <a href="#" className="brand-lockup" aria-label="Sarvesh home">
+      <a className="brand-lockup" aria-label="Sarvesh home">
         <span className="mark-bars" aria-hidden>
           <i />
           <i />
@@ -1019,8 +1019,8 @@ function CasesSection() {
         <div className="titleGroup">
           <h2>
             <b>Selected case studies</b>
-            <a href="#" aria-label="GitHub" data-sound-hover><span className="icon-github"></span></a>
-            <a href="#" aria-label="LinkedIn" data-sound-hover><span className="icon-linkedin"></span></a>
+            <a aria-label="GitHub" data-sound-hover><span className="icon-github"></span></a>
+            <a aria-label="LinkedIn" data-sound-hover><span className="icon-linkedin"></span></a>
             <br />
             I have more than <b>10 years of experience</b>
           </h2>

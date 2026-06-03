@@ -63,7 +63,7 @@ h2 b { font-weight: 600; }
 h2 a { text-decoration: none; }
 
 ::selection {
-  background: #d7ff63;
+  background: #f5c542;
   color: #050606;
 }
 
@@ -484,6 +484,7 @@ h2 a { text-decoration: none; }
 .fincard-delta.down { color: #A0494B; }
 
 .hero-content {
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
