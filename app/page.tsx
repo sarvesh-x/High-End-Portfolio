@@ -1091,7 +1091,7 @@ const EXPERIENCE = [
   { date: "2022 – 24 · BIT, Mesra", role: "Masters in Computer Applications", desc: "Develop and maintain a design system for retail investment products. Designed key mobile app areas including market view, instrument lists, favorites, and transaction history. Contributed to design operations and team processes." },
   { date: "2019 – 22 · JNU Jaipur", role: "Bachelors in Computer Applications", desc: "Delivered end-to-end fintech projects for clients, from discovery and UX to final UI, systems, and developer handoff." },
   { date: "2018 – 19 · Angels Public School, Pathankot", role: "10+2 Commerce with Computer Science", desc: "Led design work across client projects, managed a small team, and worked closely with developers." },
-  { date: "2016 – 17 · Army Public School, Lucknow", role: "10th Grade", desc: "Participated in school-level gaming, webpage design, and software review competitions. Volunteered in the Google Web Rangers workshop, gaining technical, creative, teamwork, and digital awareness experience." },
+  { date: "2016 – 17 · Army Public School, Lucknow", role: "10th Grade", desc: "During 10th standard, participated in school-level gaming, webpage design, and software review competitions. Volunteered in the Google Web Rangers workshop, gaining technical, creative, teamwork, and digital awareness experience." },
   { date: "2012 – 2015 · Atlas-2", role: "Middle Product Designer", desc: "Designed interfaces for electronic signature issuance and document workflow systems." },
 ];
 
