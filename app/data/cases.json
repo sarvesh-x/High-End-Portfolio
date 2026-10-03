@@ -48,7 +48,7 @@
     "title": "Embrae One - Wearable Breast Pump",
     "image": "/embrae-one.png",
     "desc": "A full-featured e-commerce platform for the Embrae One electric breast pump, built with Next.js 14, MongoDB, and Razorpay.",
-    "href": "https://embrae.in",
-    "demo": "https://embrae.netlify.app/"
+    "href": "https://github.com/sarvesh-x/embrae-one-demo",
+    "demo": "https://embrae.in"
   }
 ]
